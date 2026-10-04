@@ -1,0 +1,3187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#ff6b35">
+<title>Temu Kawan Pro v8</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--p1:#ff6b35;--p2:#f7931e;--p3:#a855f7;--bg:#fff8f0;--card:#fff;--txt:#1e293b;--muted:#94a3b8;--border:#f0e6dc;--ok:#10b981;--err:#ef4444;--verify:#ff8c00;--grad:linear-gradient(135deg,#ff6b35,#f7931e,#a855f7);--shadow:0 4px 20px rgba(255,107,53,.1)}
+body.dark{--bg:#0f172a;--card:#1e293b;--txt:#f1f5f9;--muted:#94a3b8;--border:#334155;--shadow:0 4px 20px rgba(0,0,0,.4)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:100px;overflow-x:hidden;transition:background .3s,color .3s}
+#app{max-width:560px;margin:0 auto;padding:12px}
+input,textarea,button,select{font-family:inherit;outline:none;border:none;background:none;color:inherit}
+button{cursor:pointer;transition:transform .12s,opacity .15s}
+button:active{transform:scale(.96)}
+.header{background:var(--card);border-radius:20px;padding:12px 16px;display:flex;align-items:center;gap:8px;margin-bottom:14px;box-shadow:var(--shadow);position:sticky;top:12px;z-index:20}
+.logo{font-size:20px;font-weight:900;flex:1;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:-2px}
+.back-header{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:20px;padding:12px 16px;margin-bottom:14px;box-shadow:var(--shadow);position:sticky;top:12px;z-index:20}
+.back-header .back-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,107,53,.1);color:var(--p1);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0}
+.back-header .title{flex:1;font-weight:900;font-size:16px}
+.avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;flex-shrink:0;border:2.5px solid var(--card);box-shadow:0 2px 8px rgba(0,0,0,.12);background:var(--grad);color:#fff;font-weight:700;position:relative;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar.sm{width:34px;height:34px;font-size:17px}
+.avatar.xs{width:26px;height:26px;font-size:13px;border-width:2px}
+.avatar.lg{width:88px;height:88px;font-size:44px;border-width:4px}
+.avatar.online::after{content:'';position:absolute;bottom:0;right:0;width:11px;height:11px;border-radius:50%;background:var(--ok);border:2.5px solid var(--card);z-index:2}
+.icon-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,107,53,.1);display:flex;align-items:center;justify-content:center;font-size:16px;position:relative;flex-shrink:0;color:var(--p1)}
+.icon-btn.online-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;background:var(--err);color:#fff;border-radius:9px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--card)}
+.badge.green{background:var(--ok)}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--card);border-top:1px solid var(--border);padding:6px 0 max(6px,env(safe-area-inset-bottom))}
+.bottomnav .inner{max-width:560px;margin:0 auto;display:flex}
+.navbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;color:var(--muted);font-size:10px;font-weight:700;position:relative}
+.navbtn .ic{font-size:22px;line-height:1}
+.navbtn.active{color:var(--p1)}
+.navbtn.create{flex:0 0 60px}
+.navbtn.create .ic{width:44px;height:44px;background:var(--grad);color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin-top:-12px;box-shadow:0 6px 18px rgba(255,107,53,.4);border:3px solid var(--card)}
+.scroll-top{position:fixed;bottom:90px;right:16px;width:44px;height:44px;border-radius:50%;background:var(--grad);color:#fff;font-size:18px;box-shadow:0 6px 20px rgba(255,107,53,.5);display:none;z-index:25;border:2px solid #fff}
+.scroll-top.show{display:flex;align-items:center;justify-content:center}
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--grad)}
+.auth-card{background:var(--card);border-radius:28px;padding:34px 26px;max-width:420px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.25);text-align:center}
+.auth-logo{font-size:38px;font-weight:900;margin-bottom:6px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.auth-tag{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}
+.auth-by{font-size:11px;color:var(--muted);margin-bottom:20px;padding:7px;background:linear-gradient(135deg,rgba(255,107,53,.08),rgba(168,85,247,.08));border-radius:10px;font-weight:600}
+.field{width:100%;padding:14px 18px;background:rgba(255,107,53,.05);border:2px solid var(--border);border-radius:16px;font-size:15px;margin-bottom:12px;color:var(--txt)}
+.field:focus{border-color:var(--p1);background:var(--card)}
+.field-wrap{position:relative;margin-bottom:12px}
+.field-wrap .field{margin-bottom:0;padding-right:50px}
+.field-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--muted)}
+.emoji-pick{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-bottom:18px}
+.emoji-pick button{font-size:20px;background:rgba(255,107,53,.05);border:2px solid transparent;border-radius:11px;padding:6px}
+.emoji-pick button.sel{border-color:var(--p1);background:rgba(255,107,53,.15)}
+.btn{width:100%;padding:14px;background:var(--grad);color:#fff;border-radius:16px;font-weight:800;font-size:15px;box-shadow:0 8px 20px rgba(255,107,53,.35)}
+.btn.sec{background:rgba(255,107,53,.1);color:var(--txt);box-shadow:none}
+.btn.wa{background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 8px 20px rgba(37,211,102,.35)}
+.link{color:var(--p1);font-weight:700;cursor:pointer}
+.card{background:var(--card);border-radius:20px;padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.ct{display:flex;gap:10px;align-items:center;padding:12px 14px;background:var(--card);border-radius:20px;margin-bottom:14px;box-shadow:var(--shadow);cursor:pointer}
+.ct .fake{flex:1;background:rgba(255,107,53,.07);border-radius:22px;padding:11px 16px;color:var(--muted);font-size:14px}
+/* TAB STYLE TIKTOK */
+.feed-tabs-tiktok{display:flex;justify-content:center;gap:32px;background:var(--card);border-radius:18px;padding:12px 16px 0;margin-bottom:14px;box-shadow:var(--shadow);position:sticky;top:78px;z-index:15}
+.feed-tab-tiktok{padding:10px 4px 14px;font-size:15px;font-weight:800;color:var(--muted);cursor:pointer;position:relative;transition:color .2s;background:none;border:none;font-family:inherit}
+.feed-tab-tiktok .cnt{font-size:11px;font-weight:700;opacity:.7;margin-left:4px}
+.feed-tab-tiktok.active{color:var(--txt)}
+.feed-tab-tiktok.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--grad);border-radius:3px;animation:tabSlide .3s ease}
+@keyframes tabSlide{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.post-head .info{flex:1;min-width:0}
+.post-head .name{font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.post-head .time{font-size:11px;color:var(--muted)}
+.post-text{font-size:14.5px;line-height:1.55;margin-bottom:10px;word-wrap:break-word;white-space:pre-wrap}
+.post-text .hashtag{color:var(--p1);font-weight:700;cursor:pointer}
+.post-img{width:100%;border-radius:14px;margin-bottom:10px;display:block;max-height:480px;object-fit:cover;cursor:pointer}
+.post-actions{display:flex;gap:6px;padding-top:10px;border-top:1px solid var(--border)}
+.act{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:12px;font-size:13px;font-weight:700;color:var(--muted)}
+.act.liked{color:var(--p1)}
+.comments{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.comments.open{display:block}
+.cmt{display:flex;gap:8px;margin-bottom:8px;font-size:13px}
+.cmt .body{background:rgba(255,107,53,.06);border-radius:14px;padding:8px 12px;flex:1}
+.cmt .body b{display:block;font-size:12px;color:var(--p1);margin-bottom:2px}
+.cmt-input{display:flex;gap:8px;margin-top:8px}
+.cmt-input input{flex:1;background:rgba(255,107,53,.07);border-radius:20px;padding:10px 16px;font-size:13px;color:var(--txt)}
+.cmt-input button{width:40px;height:40px;border-radius:50%;background:var(--grad);color:#fff;font-size:16px;flex-shrink:0}
+.empty{text-align:center;padding:50px 24px;color:var(--muted)}
+.empty .big{font-size:56px;margin-bottom:12px;opacity:.5}
+.empty h4{font-size:15px;font-weight:800;color:var(--txt);margin-bottom:6px}
+.user-row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border-radius:16px;margin-bottom:8px;box-shadow:0 2px 8px rgba(255,107,53,.05);cursor:pointer}
+.user-row .info{flex:1;min-width:0}
+.user-row .name{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.user-row .bio{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mini-btn{padding:7px 16px;border-radius:16px;font-weight:800;font-size:12px;background:var(--grad);color:#fff;flex-shrink:0}
+.mini-btn.following{background:rgba(255,107,53,.1);color:var(--txt)}
+.verify-icon{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--verify);color:#fff;font-size:10px;font-weight:900;margin-left:3px;flex-shrink:0}
+.verify-icon.founder{background:linear-gradient(135deg,#ff6b35,#f7931e);width:17px;height:17px;font-size:11px;box-shadow:0 0 0 2px rgba(255,107,53,.3)}
+.chat-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border-radius:20px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chat-header .name{font-weight:800;font-size:15px;display:flex;align-items:center;gap:4px}
+.chat-header .sub{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.chat-header .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.chat-header .dot.on{background:var(--ok)}
+.back-btn{font-size:22px;padding:4px 8px;color:var(--txt);font-weight:300}
+.chat-body{background:var(--card);border-radius:20px;padding:16px;box-shadow:var(--shadow);min-height:420px;max-height:62vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.bubble{max-width:78%;padding:10px 14px;border-radius:20px;font-size:14px;line-height:1.4;word-wrap:break-word;position:relative}
+.bubble.me{background:var(--grad);color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.bubble.them{background:rgba(255,107,53,.08);color:var(--txt);align-self:flex-start;border-bottom-left-radius:6px}
+.bubble .t{font-size:10px;opacity:.65;margin-top:4px;display:block;text-align:right}
+.bubble img,.bubble audio{max-width:100%;border-radius:12px;display:block;margin-bottom:4px}
+.chat-input-row{display:flex;gap:8px;margin-top:12px;padding:6px;background:var(--card);border-radius:24px;box-shadow:var(--shadow);align-items:center}
+.chat-input-row input{flex:1;padding:12px 16px;font-size:14px;background:transparent;color:var(--txt)}
+.chat-input-row .sm-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,107,53,.1);font-size:17px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.chat-input-row .send{width:44px;height:44px;border-radius:50%;background:var(--grad);color:#fff;font-size:18px;flex-shrink:0}
+/* PROFILE COVER */
+.profile-hero-v2{position:relative;border-radius:24px;overflow:hidden;margin-bottom:14px;color:#fff}
+.profile-cover{width:100%;height:200px;background:var(--grad);position:relative;background-size:cover;background-position:center}
+.profile-cover-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.6));pointer-events:none}
+.profile-header-info{position:relative;padding:0 20px 20px;margin-top:-60px;z-index:2;text-align:center}
+.profile-header-info .avatar{width:100px;height:100px;font-size:50px;border:5px solid var(--card);margin:0 auto 12px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.profile-header-info .pname{font-size:22px;font-weight:900;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.profile-header-info .pbio{font-size:13px;opacity:.95;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5);margin-bottom:14px;line-height:1.5}
+.profile-header-info .pmeta{display:flex;gap:14px;justify-content:center;font-size:11px;margin-bottom:14px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5);flex-wrap:wrap}
+.profile-header-info .pmeta span{display:flex;align-items:center;gap:4px}
+.profile-bg{background:var(--card);padding:20px;border-top-left-radius:24px;border-top-right-radius:24px;margin-top:-16px;position:relative;z-index:1}
+.profile-hero-v2 .stats{display:flex;justify-content:space-around;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:14px}
+.profile-hero-v2 .stat{padding:4px 12px;border-radius:12px;cursor:pointer}
+.profile-hero-v2 .stat .n{font-size:20px;font-weight:900;color:var(--txt)}
+.profile-hero-v2 .stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:700}
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.6);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;overflow-y:auto}
+.modal-bg.open{display:flex}
+.modal{background:var(--card);border-radius:24px;padding:24px;max-width:440px;width:100%;margin:auto;max-height:90vh;overflow-y:auto}
+.modal h3{margin-bottom:16px;font-size:18px;text-align:center;font-weight:800}
+.modal label{font-size:12px;font-weight:800;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase}
+.img-prev{position:relative;margin-bottom:12px;display:none}
+.img-prev.show{display:block}
+.img-prev img{width:100%;border-radius:14px;max-height:280px;object-fit:cover;transition:filter .2s}
+.img-prev button{position:absolute;top:8px;right:8px;width:30px;height:30px;background:rgba(0,0,0,.6);color:#fff;border-radius:50%;font-size:14px;z-index:2}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--txt);color:var(--card);padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.section-title{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;padding:8px 4px;display:flex;align-items:center;gap:6px}
+.section-title .num{background:var(--p1);color:#fff;font-size:10px;padding:1px 7px;border-radius:8px}
+.notif{display:flex;gap:10px;padding:12px;background:var(--card);border-radius:14px;margin-bottom:8px;box-shadow:0 2px 8px rgba(255,107,53,.05);cursor:pointer;border-left:3px solid transparent}
+.notif.unread{border-left-color:var(--p1);background:rgba(255,107,53,.05)}
+.notif .body{flex:1;font-size:13px;line-height:1.5}
+.notif .body b{color:var(--p1)}
+.notif .t{font-size:11px;color:var(--muted);margin-top:3px}
+.notif .follow-btn{margin-top:6px;padding:5px 12px;border-radius:12px;background:var(--grad);color:#fff;font-size:11px;font-weight:800;display:inline-block}
+.stories{display:flex;gap:10px;overflow-x:auto;padding:6px 0 14px;margin-bottom:8px;scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.story-item{flex-shrink:0;text-align:center;cursor:pointer;width:68px}
+.story-ring{width:64px;height:64px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#ff6b35,#f7931e,#a855f7);display:flex;align-items:center;justify-content:center;position:relative}
+.story-ring.seen{background:var(--border)}
+.story-ring .avatar{width:100%;height:100%;font-size:26px;border:none;box-shadow:none;background:var(--card);color:var(--txt)}
+.story-ring .plus{position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;background:var(--grad);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;border:2.5px solid var(--card)}
+.story-item .lbl{font-size:11px;color:var(--txt);font-weight:600;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.group-item{background:var(--card);border-radius:16px;padding:12px;margin-bottom:8px;display:flex;gap:12px;align-items:center;box-shadow:0 2px 8px rgba(255,107,53,.05);cursor:pointer}
+.group-item .gic{width:48px;height:48px;border-radius:16px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.group-item .info{flex:1;min-width:0}
+.group-item .name{font-weight:800;font-size:14px}
+.group-item .sub{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* STATISTIK INTERAKTIF */
+.admin-stat{background:var(--card);border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(255,107,53,.05);cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}
+.admin-stat:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,107,53,.2)}
+.admin-stat:active{transform:translateY(-1px)}
+.admin-stat .n{font-size:26px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.admin-stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;margin-top:4px;font-weight:700}
+.admin-stat .arrow{position:absolute;top:8px;right:10px;font-size:11px;color:var(--muted);opacity:.5}
+.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.footer-copy{text-align:center;padding:14px;margin-top:20px;margin-bottom:70px;font-size:11px;color:var(--muted);line-height:1.7}
+.footer-copy b{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+.verified-badge{background:linear-gradient(135deg,#ff8c00,#ff6b35);color:#fff;font-size:10px;font-weight:800;padding:3px 9px;border-radius:8px;display:inline-flex;align-items:center;gap:4px}
+.verified-badge::before{content:'✓';font-size:12px;font-weight:900}
+.sk-box{background:rgba(255,107,53,.06);border-radius:12px;padding:12px;font-size:12px;line-height:1.7;color:var(--txt);margin-bottom:12px;max-height:180px;overflow-y:auto}
+.sk-box b{color:var(--p1);display:block;margin-bottom:6px}
+.setting-list{background:var(--card);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.setting-item{display:flex;align-items:center;gap:14px;padding:16px 18px;border-bottom:1px solid var(--border);cursor:pointer}
+.setting-item:last-child{border-bottom:none}
+.setting-item .sic{font-size:22px;flex-shrink:0;width:28px;text-align:center}
+.setting-item .stxt{flex:1}
+.setting-item .sttl{font-weight:700;font-size:14px}
+.setting-item .ssub{font-size:11px;color:var(--muted);margin-top:2px}
+.setting-item .sarr{color:var(--muted);font-size:18px;font-weight:300}
+.setting-item.danger .sttl{color:var(--err)}
+.setting-section-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;padding:14px 8px 8px;display:flex;align-items:center;gap:6px}
+.setting-section-title.founder{color:var(--verify)}
+.founder-box{border:2px solid var(--verify);border-radius:20px;overflow:hidden;background:var(--card);margin-bottom:14px}
+.founder-head{padding:14px 18px;background:linear-gradient(135deg,rgba(255,107,53,.15),rgba(168,85,247,.15));display:flex;align-items:center;gap:10px}
+.founder-head .fic{font-size:24px}
+.founder-head .fttl{font-weight:900;font-size:14px;color:var(--verify)}
+.founder-head .fsub{font-size:11px;color:var(--muted);margin-top:2px}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.pin-pad button{padding:20px;font-size:22px;font-weight:800;background:rgba(255,107,53,.08);border-radius:16px;color:var(--txt)}
+.pin-dots{text-align:center;font-size:24px;letter-spacing:8px;color:var(--p1);min-height:30px;margin-bottom:10px}
+.stat-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);border-radius:14px;margin-bottom:8px;box-shadow:0 2px 8px rgba(255,107,53,.05)}
+.stat-row .sic{font-size:22px;flex-shrink:0}
+.stat-row .stxt{flex:1;font-size:13px;font-weight:600}
+.stat-row .sval{font-weight:900;color:var(--p1);font-size:14px}
+.filter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.filter-item{padding:8px;background:rgba(255,107,53,.05);border:2px solid transparent;border-radius:12px;text-align:center;cursor:pointer;font-size:10px;font-weight:700}
+.filter-item.sel{border-color:var(--p1);background:rgba(255,107,53,.15)}
+.filter-item .fi{font-size:20px;display:block;margin-bottom:3px}
+.filter-slider{margin-bottom:12px}
+.filter-slider label{font-size:11px;font-weight:800;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase}
+.filter-slider input[type=range]{width:100%;accent-color:var(--p1)}
+.sticker-row{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding:4px 0;scrollbar-width:none}
+.sticker-row::-webkit-scrollbar{display:none}
+.sticker-row button{font-size:26px;background:rgba(255,107,53,.06);border:2px solid transparent;border-radius:12px;padding:6px 10px;flex-shrink:0;cursor:pointer}
+.sticker-row button.sel{border-color:var(--p1);background:rgba(255,107,53,.15)}
+.profile-tabs{display:flex;background:var(--card);border-radius:16px;padding:5px;margin-bottom:14px;box-shadow:var(--shadow)}
+.profile-tab{flex:1;padding:10px;border-radius:12px;font-weight:700;font-size:13px;color:var(--muted);text-align:center;cursor:pointer}
+.profile-tab.active{background:var(--grad);color:#fff}
+.vchat-wrap{background:var(--card);border-radius:16px;padding:14px;margin-top:12px;box-shadow:var(--shadow)}
+.vchat-title{font-size:12px;font-weight:800;color:var(--p1);margin-bottom:8px;text-transform:uppercase}
+.vchat-msg{padding:8px 12px;border-radius:12px;margin-bottom:6px;font-size:12px;line-height:1.5;max-width:85%}
+.vchat-msg.me{background:var(--grad);color:#fff;margin-left:auto}
+.vchat-msg.them{background:rgba(255,107,53,.1);color:var(--txt)}
+.vchat-msg .vt{font-size:10px;opacity:.7;margin-top:4px;display:block;text-align:right}
+.vchat-input{display:flex;gap:8px;margin-top:10px}
+.vchat-input input{flex:1;padding:10px 14px;background:rgba(255,107,53,.06);border-radius:20px;font-size:13px;color:var(--txt)}
+.vchat-input button{width:38px;height:38px;border-radius:50%;background:var(--grad);color:#fff;font-size:14px;flex-shrink:0}
+.vtemplate-row{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:4px;scrollbar-width:none}
+.vtemplate-row::-webkit-scrollbar{display:none}
+.vtemplate{background:rgba(255,107,53,.08);color:var(--p1);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;flex-shrink:0;border:1px solid rgba(255,107,53,.2)}
+/* REELS FULLSCREEN */
+.reels-container{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:100;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+.reels-container::-webkit-scrollbar{display:none}
+.reel-full{position:relative;width:100%;height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;background:#000;color:#fff}
+.reel-full video{width:100%;height:100%;object-fit:contain;background:#000}
+.reel-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);color:#fff}
+.reel-user{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.reel-user .name{font-weight:800;font-size:14px}
+.reel-caption{font-size:13px;line-height:1.5;margin-bottom:8px}
+.reel-actions{position:absolute;right:14px;bottom:120px;display:flex;flex-direction:column;gap:18px;z-index:5}
+.reel-act{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;color:#fff;cursor:pointer;border:none}
+.reel-act .cnt{font-size:10px;font-weight:700;margin-top:-2px}
+.reel-act.liked{background:rgba(255,107,53,.7)}
+.reels-back-btn{position:fixed;top:20px;left:16px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;z-index:110;border:none;cursor:pointer}
+/* SOUND */
+.sound-card{background:var(--card);border-radius:16px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:center;box-shadow:0 2px 8px rgba(255,107,53,.05)}
+.sound-card .sc-icon{width:48px;height:48px;border-radius:14px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sound-card .sc-info{flex:1;min-width:0}
+.sound-card .sc-name{font-weight:800;font-size:13px}
+.sound-card .sc-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.sound-card .sc-btn{width:38px;height:38px;border-radius:50%;background:var(--grad);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sound-card .sc-btn.playing{background:var(--err);animation:recPulse 1s infinite}
+@keyframes recPulse{50%{transform:scale(1.1)}}
+/* MODAL ONLINE */
+.online-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border-radius:14px;margin-bottom:8px;box-shadow:0 2px 8px rgba(255,107,53,.05)}
+.online-item .info{flex:1;min-width:0}
+.online-item .name{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.online-item .bio{font-size:11px;color:var(--ok);margin-top:2px;font-weight:700}
+.online-item .bio.off{color:var(--muted);font-weight:600}
+.online-actions{display:flex;gap:6px;flex-shrink:0}
+.online-actions button{width:36px;height:36px;border-radius:50%;font-size:15px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer}
+.online-actions .oa-chat{background:linear-gradient(135deg,#ff6b35,#f7931e);color:#fff}
+.online-actions .oa-profile{background:rgba(255,107,53,.15);color:var(--p1)}
+.online-actions .oa-wa{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
+.online-actions .oa-call{background:rgba(239,68,68,.15);color:var(--err)}
+.online-actions button:disabled{opacity:.4;cursor:not-allowed}
+/* TOP USER & TRENDING */
+.top-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border-radius:14px;margin-bottom:8px;box-shadow:0 2px 8px rgba(255,107,53,.05)}
+.top-item .rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;flex-shrink:0}
+.top-item .rank.r1{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
+.top-item .rank.r2{background:linear-gradient(135deg,#94a3b8,#64748b)}
+.top-item .rank.r3{background:linear-gradient(135deg,#d97706,#92400e)}
+.top-item .rank.rN{background:rgba(255,107,53,.2);color:var(--p1)}
+.top-item .info{flex:1;min-width:0}
+.top-item .name{font-weight:800;font-size:13px;display:flex;align-items:center;gap:4px}
+.top-item .score{font-size:11px;color:var(--muted);margin-top:2px}
+.top-item .val{font-weight:900;color:var(--p1);font-size:14px;flex-shrink:0}
+/* GRAFIK AKTIVITAS */
+.chart-wrap{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.chart-bars{display:flex;align-items:flex-end;justify-content:space-between;height:120px;gap:6px;margin-bottom:8px}
+.chart-bar{flex:1;background:var(--grad);border-radius:6px 6px 0 0;min-height:4px;position:relative;transition:transform .2s}
+.chart-bar:hover{transform:scaleY(1.05)}
+.chart-bar .val{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;color:var(--p1);white-space:nowrap}
+.chart-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-weight:700}
+/* HASHTAG TRENDING */
+.hashtag-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border-radius:14px;margin-bottom:8px;box-shadow:0 2px 8px rgba(255,107,53,.05);cursor:pointer}
+.hashtag-item .ht-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#ff6b35,#a855f7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0}
+.hashtag-item .ht-info{flex:1;min-width:0}
+.hashtag-item .ht-name{font-weight:800;font-size:14px;color:var(--p1)}
+.hashtag-item .ht-count{font-size:11px;color:var(--muted);margin-top:2px}
+.hashtag-item .ht-arrow{color:var(--muted);font-size:18px}
+/* NEW USER BAR */
+.new-user-bar{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(168,85,247,.1));border-radius:14px;padding:10px 14px;margin-bottom:12px;font-size:12px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.new-user-bar .nu-icon{font-size:20px}
+.new-user-bar .nu-txt{flex:1;font-weight:700}
+.new-user-bar .nu-arr{color:var(--p1);font-size:18px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+<button class="scroll-top" id="scrollTop">↑</button>
+<!-- PESAN 2: JAVASCRIPT DIMULAI DI SINI -->
+<script>
+'use strict';
+/* ============================================================
+   TEMU KAWAN PRO v8.0 - PART 1
+   Created by Shank Anggara From Ulumonggo
+   © 2025. All Rights Reserved.
+============================================================ */
+
+const FOUNDER = {
+  id: 'shank', name: 'ShankAnggara', username: 'shank',
+  password: 'batusiding', avatar: '👑',
+  bio: 'Founder Temu Kawan • From Ulumonggo'
+};
+
+const AVATARS = ['😀','😎','🐱','🐶','🦊','🐼','🦁','🐸','🐧','🦄','👽','🤖','🐯','🐨','🐵','🐷','🐮','🦉','🦋','🐙','🌸','⭐','🔥','💎'];
+const BOT_REPLIES = ['Hai juga! 👋','Wah keren!','Iya bener 😄','Haha lucu 😆','Oh gitu ya!','Setuju 👍','Sip! 🙌','Mantap!','Semangat 💪','Noted 📝'];
+const BOT_DATA = [
+  { name:'Andi Pratama', email:'andi@demo.com', avatar:'🐱', bio:'Kopi & coding ☕', post:'Baru selesai bikin fitur realtime! 🎉 #coding' },
+  { name:'Sari Dewi', email:'sari@demo.com', avatar:'🦊', bio:'Traveler 📸', post:'Sunset di pantai keren parah 🌅 #travel #sunset' },
+  { name:'Budi Santoso', email:'budi@demo.com', avatar:'🐼', bio:'Gamer 🎮', post:'Rank naik satu tier! #gaming' },
+  { name:'Maya Anggraini', email:'maya@demo.com', avatar:'🦄', bio:'Desainer 🎨', post:'Belajar palet warna baru 🎨 #design #art' },
+  { name:'Rizki Maulana', email:'rizki@demo.com', avatar:'🐧', bio:'Pecinta alam 🌲', post:'Minggu depan naik gunung 🏔️ #hiking #nature' },
+  { name:'Nina Lestari', email:'nina@demo.com', avatar:'🌸', bio:'Kopi & buku 📚', post:'Baru selesai baca buku bagus! #reading' }
+];
+
+const SK_VERIFIKASI = [
+  'Nama asli & jelas (bukan panggilan)',
+  'Email aktif yang bisa dihubungi',
+  'Bergabung minimal 7 hari',
+  'Foto profil asli (bukan default)',
+  'Tidak pernah melanggar aturan komunitas',
+  'Tidak terlibat spam/penipuan/SARA',
+  'Aktif berkontribusi di Temu Kawan',
+  'Bersedia mengikuti aturan Founder'
+];
+
+const BUILTIN_SOUNDS = [
+  { id:'s1', name:'Tepuk Tangan', icon:'👏', data:'BUILTIN', freq:800, dur:0.3 },
+  { id:'s2', name:'Ketawa', icon:'😄', data:'BUILTIN', freq:400, dur:0.5 },
+  { id:'s3', name:'Ding Notif', icon:'🔔', data:'BUILTIN', freq:1200, dur:0.2 },
+  { id:'s4', name:'Pop', icon:'🎈', data:'BUILTIN', freq:600, dur:0.15 },
+  { id:'s5', name:'Klakson', icon:'🚗', data:'BUILTIN', freq:350, dur:0.4 },
+  { id:'s6', name:'Sukses', icon:'✅', data:'BUILTIN', freq:1000, dur:0.3 },
+  { id:'s7', name:'Error', icon:'❌', data:'BUILTIN', freq:200, dur:0.4 },
+  { id:'s8', name:'Whoosh', icon:'💨', data:'BUILTIN', freq:500, dur:0.25 },
+  { id:'s9', name:'Sparkle', icon:'✨', data:'BUILTIN', freq:1500, dur:0.3 },
+  { id:'s10', name:'Drum', icon:'🥁', data:'BUILTIN', freq:150, dur:0.15 }
+];
+
+let state = null;
+let view = { screen:'feed', profileId:null, chatWith:null, groupId:null, feedTab:'all', profileTab:'status', verificationId:null, reelIndex:0, trendingHashtag:null };
+let pendingImage = null;
+let pendingProfilePic = null;
+let pendingCoverPic = null;
+let pendingVideo = null;
+let mediaRecorder = null;
+let audioChunks = [];
+let recordingTimer = null;
+let recordingStart = 0;
+let pinInput = '';
+let currentFilter = { brightness:100, contrast:100, saturate:100, hue:0, blur:0, effect:'none', sticker:'' };
+let soundAudioEl = null;
+let reelObserver = null;
+let onlineModalTimer = null;
+
+const STORE_KEY = 'temu_kawan_v8';
+const AUTOLOGIN_KEY = 'tkp_auto_login_v8';
+const THEME_KEY = 'tkp_theme_v8';
+
+function defaultState() {
+  return { v:8, users:{}, posts:[], reels:[], chats:{}, groups:{}, notifications:{}, stories:{}, verifikasi:[], customSounds:[], seeded:false };
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) { const d = JSON.parse(raw); if (d && d.v === 8) return d; }
+  } catch(e){}
+  return defaultState();
+}
+function saveState() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e){}
+}
+function getTheme() { return localStorage.getItem(THEME_KEY) || 'light'; }
+function setTheme(t) { localStorage.setItem(THEME_KEY, t); }
+function getMeId() { return localStorage.getItem(AUTOLOGIN_KEY); }
+function setMeId(id) {
+  if (id) localStorage.setItem(AUTOLOGIN_KEY, id);
+  else localStorage.removeItem(AUTOLOGIN_KEY);
+}
+function me() { const id = getMeId(); return id ? state.users[id] : null; }
+function user(id) { return state.users[id]; }
+
+const $ = id => document.getElementById(id);
+const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+
+function timeAgo(t) {
+  const s = Math.floor((Date.now() - t) / 1000);
+  if (s < 5) return 'baru saja';
+  if (s < 60) return s + ' dtk lalu';
+  if (s < 3600) return Math.floor(s/60) + ' mnt lalu';
+  if (s < 86400) return Math.floor(s/3600) + ' jam lalu';
+  if (s < 604800) return Math.floor(s/86400) + ' hr lalu';
+  return new Date(t).toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+}
+function timeFull(t){ return new Date(t).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
+function isOnline(id){
+  const u = state.users[id]; if (!u) return false;
+  if (u.isBot) return true;
+  return Date.now() - (u.lastSeen || 0) < 45000;
+}
+function chatKey(a,b){ return [a,b].sort().join('__'); }
+function toast(msg){
+  const el = $('toast'); if (!el) return;
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(()=>el.classList.remove('show'), 2200);
+}
+function playSoundEffect(freq, dur){
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = freq || 700; o.type='sine';
+    g.gain.setValueAtTime(0.08, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (dur||0.2));
+    o.start(); o.stop(ctx.currentTime + (dur||0.2));
+  } catch(e){}
+}
+function buildFilter(){
+  let f = 'brightness(' + currentFilter.brightness + '%) contrast(' + currentFilter.contrast + '%) saturate(' + currentFilter.saturate + '%) hue-rotate(' + currentFilter.hue + 'deg)';
+  if (currentFilter.blur > 0) f += ' blur(' + currentFilter.blur + 'px)';
+  if (currentFilter.effect === 'grayscale') f += ' grayscale(100%)';
+  if (currentFilter.effect === 'sepia') f += ' sepia(80%)';
+  if (currentFilter.effect === 'vintage') f += ' sepia(40%) contrast(110%) brightness(90%)';
+  if (currentFilter.effect === 'cool') f += ' hue-rotate(180deg)';
+  if (currentFilter.effect === 'warm') f += ' hue-rotate(-30deg) saturate(130%)';
+  return f;
+}
+function avatarHtml(u, extraClass = '') {
+  if (!u) return '<div class="avatar ' + extraClass + '">❓</div>';
+  if (u.avatarPic) return '<div class="avatar ' + extraClass + '"><img src="' + u.avatarPic + '"></div>';
+  return '<div class="avatar ' + extraClass + '">' + (u.avatar||'👤') + '</div>';
+}
+function coverBg(u){
+  if (!u || !u.coverPic) return 'linear-gradient(135deg,#ff6b35,#f7931e,#a855f7)';
+  return 'url(' + u.coverPic + ')';
+}
+function nameWithBadge(u) {
+  if (!u) return '?';
+  let badge = '';
+  if (u.isFounder) badge = '<span class="verify-icon founder" title="Founder">✓</span>';
+  else if (u.verified) badge = '<span class="verify-icon" title="Terverifikasi">✓</span>';
+  return esc(u.name) + badge;
+}
+function highlightHashtag(text){
+  if (!text) return '';
+  return esc(text).replace(/#(\w+)/g, '<span class="hashtag" data-tag="$1">#$1</span>');
+}
+function extractHashtags(text){
+  if (!text) return [];
+  const m = text.match(/#(\w+)/g);
+  return m ? m.map(function(t){ return t.slice(1).toLowerCase(); }) : [];
+}
+function applyTheme(){
+  document.body.classList.toggle('dark', getTheme() === 'dark');
+}
+function toggleTheme(){
+  const t = getTheme() === 'dark' ? 'light' : 'dark';
+  setTheme(t); applyTheme();
+  toast(t === 'dark' ? '🌙 Mode Gelap' : '☀️ Mode Terang');
+}
+function pushNotif(userId, type, data){
+  if (!state.notifications[userId]) state.notifications[userId] = [];
+  state.notifications[userId].unshift({ id: uid('n'), type: type, data: data, time: Date.now(), read: false });
+  if (state.notifications[userId].length > 60) state.notifications[userId] = state.notifications[userId].slice(0, 60);
+}
+function unreadNotifs(id){ return (state.notifications[id] || []).filter(function(n){return !n.read;}).length; }
+function countOnline(){
+  const meId = getMeId();
+  return Object.values(state.users).filter(function(u){ return u.id !== meId && isOnline(u.id); }).length;
+}
+function countUnreadChats(){
+  const id = getMeId(); let n = 0;
+  for (const k in state.chats){
+    if (k.indexOf(id) < 0) continue;
+    const msgs = state.chats[k] || [];
+    const last = msgs[msgs.length-1];
+    if (last && last.from !== id && (!last.readBy || !last.readBy[id])) n++;
+  }
+  return n;
+}
+
+/* ============ HASHTAG ANALYSIS ============ */
+function getTrendingHashtags(limit){
+  const tagCount = {};
+  state.posts.forEach(function(p){
+    if (!p.text) return;
+    const tags = extractHashtags(p.text);
+    tags.forEach(function(t){
+      if (!tagCount[t]) tagCount[t] = { count: 0, likes: 0 };
+      tagCount[t].count++;
+      tagCount[t].likes += (p.likes||[]).length;
+    });
+  });
+  const arr = Object.keys(tagCount).map(function(k){
+    return { tag: k, count: tagCount[k].count, likes: tagCount[k].likes, score: tagCount[k].count * 2 + tagCount[k].likes };
+  });
+  arr.sort(function(a,b){ return b.score - a.score; });
+  return arr.slice(0, limit || 10);
+}
+
+/* ============ ACTIVITY CHART (7 hari) ============ */
+function getActivityChart(){
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    d.setHours(0,0,0,0);
+    const start = d.getTime();
+    const end = start + 86400000;
+    const dayName = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()];
+    const postCount = state.posts.filter(function(p){ return p.time >= start && p.time < end; }).length;
+    days.push({ label: dayName, count: postCount, date: d });
+  }
+  return days;
+}
+
+/* ============ TOP USER ============ */
+function getTopUsers(limit, by){
+  by = by || 'post';
+  const arr = Object.values(state.users).filter(function(u){ return !u.isBot || true; }).map(function(u){
+    let score = 0;
+    if (by === 'post') score = state.posts.filter(function(p){ return p.authorId === u.id; }).length;
+    else if (by === 'likes') score = state.posts.filter(function(p){ return p.authorId === u.id; }).reduce(function(a,p){ return a + p.likes.length; }, 0);
+    else if (by === 'followers') score = (u.followers||[]).length;
+    return { user: u, score: score };
+  });
+  arr.sort(function(a,b){ return b.score - a.score; });
+  return arr.slice(0, limit || 10);
+}
+
+/* ============ NEW USERS ============ */
+function getNewUsers(limit){
+  const arr = Object.values(state.users).filter(function(u){
+    return !u.isBot && u.id !== FOUNDER.id && (Date.now() - u.joinedAt) < 7 * 86400000;
+  });
+  arr.sort(function(a,b){ return b.joinedAt - a.joinedAt; });
+  return arr.slice(0, limit || 20);
+}
+
+/* ============ SEED ============ */
+function seed(){
+  if (state.seeded) return;
+  state.seeded = true;
+  state.users[FOUNDER.id] = {
+    id: FOUNDER.id, username: FOUNDER.username, name: FOUNDER.name,
+    email: 'founder@temukawan.app', avatar: FOUNDER.avatar, avatarPic: null, coverPic: null,
+    bio: FOUNDER.bio, password: FOUNDER.password, wa: '', kota: '',
+    isBot: false, isAdmin: true, isFounder: true, verified: true,
+    following: [], followers: [], joinedAt: Date.now(), lastSeen: Date.now(), pin: null
+  };
+  BOT_DATA.forEach(function(b, i){
+    const id = 'bot' + i;
+    state.users[id] = {
+      id: id, name: b.name, email: b.email, avatar: b.avatar, avatarPic: null, coverPic: null,
+      bio: b.bio, wa: '0812' + (10000000 + i*1111111), kota: ['Jakarta','Bandung','Surabaya','Yogyakarta','Medan','Makassar'][i],
+      isBot: true, verified: i < 3, following: [], followers: [],
+      joinedAt: Date.now() - (i+1)*86400000, lastSeen: Date.now() - (i*100000)
+    };
+  });
+  BOT_DATA.forEach(function(_, i){
+    for (let j = 0; j < BOT_DATA.length; j++) {
+      if (j !== i && Math.random() < 0.55) {
+        state.users['bot'+i].following.push('bot'+j);
+        state.users['bot'+j].followers.push('bot'+i);
+      }
+    }
+  });
+  BOT_DATA.forEach(function(b, i){
+    state.posts.push({ id: uid('p'), authorId: 'bot'+i, text: b.post, image: null, likes: [], comments: [], time: Date.now() - (i+1)*1800000 });
+  });
+  saveState();
+}
+
+/* ============ AUTH ============ */
+function renderAuth(){
+  let picked = '😀';
+  let mode = 'login';
+  const app = $('app');
+  app.innerHTML = '<div class="auth-wrap"><div class="auth-card">' +
+    '<div class="auth-logo">Temu Kawan</div>' +
+    '<div class="auth-tag">Menyapa Bebual Bersama ✨</div>' +
+    '<div class="auth-by">By <b>Shank Anggara From Ulumonggo</b></div>' +
+    '<div id="authForm"></div></div></div>';
+  drawForm();
+
+  function drawForm(){
+    const f = $('authForm'); if (!f) return;
+    if (mode === 'login') {
+      f.innerHTML = '<input class="field" id="aUser" placeholder="Username atau Email" autocomplete="off">' +
+        '<div class="field-wrap"><input class="field" id="aPass" type="password" placeholder="Password"><button class="field-eye" id="eyePass" type="button">👁️</button></div>' +
+        '<button class="btn" id="aBtn">Masuk 🚀</button>' +
+        '<p style="margin-top:14px;font-size:13px;color:var(--muted);text-align:center"><span class="link" id="goForgot">🔑 Lupa Password?</span></p>' +
+        '<p style="margin-top:14px;font-size:13px;color:var(--muted);text-align:center">Belum punya akun? <span class="link" id="goReg">Daftar</span></p>';
+      $('eyePass').onclick = function(){
+        const p = $('aPass');
+        if (p.type === 'password') { p.type = 'text'; this.textContent = '🙈'; }
+        else { p.type = 'password'; this.textContent = '👁️'; }
+      };
+      $('aBtn').onclick = function(){
+        const key = $('aUser').value.trim();
+        const pass = $('aPass').value;
+        if (!key || !pass) return toast('Isi username & password');
+        if ((key.toLowerCase() === FOUNDER.username || key.toLowerCase() === FOUNDER.name.toLowerCase()) && pass === FOUNDER.password) {
+          setMeId(FOUNDER.id);
+          enterApp(FOUNDER.name);
+          return;
+        }
+        const found = Object.values(state.users).find(function(u){
+          if (u.id === FOUNDER.id || u.isBot) return false;
+          const k = key.toLowerCase();
+          return (u.username && u.username.toLowerCase() === k) || (u.email && u.email.toLowerCase() === k) || (u.id === key) || (u.name && u.name.toLowerCase() === k);
+        });
+        if (!found) return toast('Akun tidak ditemukan');
+        if (found.password !== pass) return toast('Password salah');
+        setMeId(found.id); enterApp(found.name);
+      };
+      $('goReg').onclick = function(){ mode = 'register'; drawForm(); };
+      $('goForgot').onclick = function(){ mode = 'forgot'; drawForm(); };
+    } else if (mode === 'forgot') {
+      f.innerHTML = '<p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6;text-align:left">Masukkan <b>Username</b> + <b>Email</b> terdaftar.</p>' +
+        '<input class="field" id="fUser" placeholder="Username">' +
+        '<input class="field" id="fEmail" placeholder="Email terdaftar">' +
+        '<button class="btn" id="fBtn">🔍 Cari Akun</button>' +
+        '<p style="margin-top:14px;font-size:13px;color:var(--muted);text-align:center">Ingat password? <span class="link" id="goLog">Kembali</span></p>' +
+        '<div id="fResult" style="margin-top:18px"></div>';
+      $('goLog').onclick = function(){ mode = 'login'; drawForm(); };
+      $('fBtn').onclick = function(){
+        const key = $('fUser').value.trim().toLowerCase();
+        const email = $('fEmail').value.trim().toLowerCase();
+        const res = $('fResult');
+        if (!key || !email) { res.innerHTML = '<p style="color:var(--err);font-size:13px">⚠️ Isi username & email!</p>'; return; }
+        const found = Object.values(state.users).find(function(u){
+          if (u.isBot || u.id === FOUNDER.id) return false;
+          return ((u.id.toLowerCase() === key) || (u.username && u.username.toLowerCase() === key) || (u.name.toLowerCase() === key) || (u.email && u.email.toLowerCase() === key)) && u.email && u.email.toLowerCase() === email;
+        });
+        if (!found) { res.innerHTML = '<p style="color:var(--err);font-size:13px">❌ Akun tidak ditemukan</p>'; return; }
+        res.innerHTML = '<div style="background:rgba(16,185,129,.1);border:2px solid var(--ok);border-radius:14px;padding:14px;text-align:left">' +
+          '<p style="font-size:12px;color:var(--ok);font-weight:800;margin-bottom:10px">✅ Akun: <b>' + esc(found.name) + '</b></p>' +
+          '<div class="field-wrap"><input class="field" id="fNew1" type="password" placeholder="Password baru"><button class="field-eye" onclick="toggleEye(\'fNew1\',this)" type="button">👁️</button></div>' +
+          '<div class="field-wrap"><input class="field" id="fNew2" type="password" placeholder="Ulangi"><button class="field-eye" onclick="toggleEye(\'fNew2\',this)" type="button">👁️</button></div>' +
+          '<button class="btn" id="fReset" style="background:linear-gradient(135deg,#10b981,#059669)">✅ Reset Password</button></div>';
+        $('fReset').onclick = function(){
+          const p1 = $('fNew1').value, p2 = $('fNew2').value;
+          if (!p1 || p1.length < 4) return toast('Password min 4 karakter');
+          if (p1 !== p2) return toast('Password tidak sama!');
+          found.password = p1;
+          saveState(); toast('🎉 Password direset!');
+          setTimeout(function(){ mode = 'login'; drawForm(); }, 1200);
+        };
+      };
+    } else {
+      f.innerHTML = '<input class="field" id="aUser" placeholder="Username (min 3)" maxlength="20">' +
+        '<input class="field" id="aName" placeholder="Nama tampilan" maxlength="24">' +
+        '<input class="field" id="aEmail" type="email" placeholder="Email" maxlength="60">' +
+        '<div class="field-wrap"><input class="field" id="aPass" type="password" placeholder="Password (min 4)"><button class="field-eye" onclick="toggleEye(\'aPass\',this)" type="button">👁️</button></div>' +
+        '<input class="field" id="aBio" placeholder="Bio (opsional)" maxlength="80">' +
+        '<label style="font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;display:block;text-align:left;margin-bottom:8px">Pilih avatar</label>' +
+        '<div class="emoji-pick" id="aEmoji">' + AVATARS.map(function(e,i){return '<button type="button" data-e="'+e+'" class="'+(i===0?'sel':'')+'">'+e+'</button>';}).join('') + '</div>' +
+        '<button class="btn" id="aBtn">Daftar Sekarang ✨</button>' +
+        '<p style="margin-top:16px;font-size:13px;color:var(--muted);text-align:center">Sudah punya akun? <span class="link" id="goLog">Masuk</span></p>';
+      $('aEmoji').onclick = function(e){
+        const b = e.target.closest('button'); if (!b) return;
+        this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');});
+        b.classList.add('sel'); picked = b.dataset.e;
+      };
+      $('aBtn').onclick = function(){
+        const username = $('aUser').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+        const name = $('aName').value.trim();
+        const email = $('aEmail').value.trim().toLowerCase();
+        const pass = $('aPass').value;
+        const bio = $('aBio').value.trim();
+        if (!username || username.length < 3) return toast('Username min 3 karakter');
+        if (username === FOUNDER.username) return toast('Username tidak bisa dipakai');
+        if (!name) return toast('Isi nama');
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('Email tidak valid');
+        if (!pass || pass.length < 4) return toast('Password min 4 karakter');
+        if (state.users['u_' + username]) return toast('Username sudah dipakai');
+        if (Object.values(state.users).some(function(u){return u.email && u.email.toLowerCase() === email;})) return toast('Email sudah terdaftar');
+        const id = 'u_' + username;
+        state.users[id] = {
+          id: id, username: username, name: name, email: email, avatar: picked, avatarPic: null, coverPic: null,
+          bio: bio || 'Hai! Saya pengguna baru 👋',
+          password: pass, isBot: false, isAdmin: false, isFounder: false, verified: false,
+          following: ['bot0','bot1'], followers: [], joinedAt: Date.now(), lastSeen: Date.now(), wa: '', kota: ''
+        };
+        state.users['bot0'].followers.push(id);
+        state.users['bot1'].followers.push(id);
+        Object.values(state.users).forEach(function(other){
+          if (!other.isBot && other.id !== id && !other.isFounder) {
+            pushNotif(other.id, 'newuser', { by: id });
+          }
+        });
+        saveState();
+        setMeId(id); enterApp(name);
+      };
+      $('goLog').onclick = function(){ mode = 'login'; drawForm(); };
+    }
+  }
+}
+
+window.toggleEye = function(inputId, btn){
+  const p = $(inputId); if (!p) return;
+  if (p.type === 'password') { p.type = 'text'; btn.textContent = '🙈'; }
+  else { p.type = 'password'; btn.textContent = '👁️'; }
+};
+
+function enterApp(name){
+  toast('Selamat datang, ' + name + '! 🎉');
+  view = { screen:'feed', profileId:null, chatWith:null, groupId:null, feedTab:'all', profileTab:'status', verificationId:null, reelIndex:0, trendingHashtag:null };
+  render();
+  setInterval(function(){
+    const id = getMeId(); if (!id || !state.users[id]) return;
+    state.users[id].lastSeen = Date.now(); saveState();
+  }, 15000);
+}
+
+/* ============ RENDER UTAMA ============ */
+function render(){
+  seed();
+  applyTheme();
+  const myId = getMeId();
+  if (!myId || !state.users[myId]) { renderAuth(); return; }
+  state.users[myId].lastSeen = Date.now();
+  saveState();
+
+  const app = $('app'); app.innerHTML = '';
+  const currentMe = me();
+  if (!currentMe) { renderAuth(); return; }
+
+  const unN = unreadNotifs(myId);
+  const onlineCount = countOnline();
+  const unreadChats = countUnreadChats();
+  const isDark = getTheme() === 'dark';
+
+  const hideMainHeader = ['pengaturan','pusatakun','keamanan','tentang','verifikasi','kelolauser','statistik','chatroom','groupchat','sounds','verifdetail','trending','hashtag'].indexOf(view.screen) >= 0;
+  const isReels = view.screen === 'reels';
+
+  if (isReels) {
+    renderReelsFullscreen(app);
+    return;
+  }
+
+  if (hideMainHeader) {
+    const titles = {
+      pengaturan:'⚙️ Pengaturan', pusatakun:'🔐 Pusat Akun', keamanan:'🛡️ Keamanan',
+      tentang:'ℹ️ Tentang', verifikasi:'📥 Verifikasi', kelolauser:'👥 Kelola Pengguna',
+      statistik:'📊 Statistik', chatroom: view.chatWith && user(view.chatWith) ? user(view.chatWith).name : 'Chat',
+      groupchat: view.groupId && state.groups[view.groupId] ? state.groups[view.groupId].name : 'Grup',
+      sounds:'🎵 Sound Community', verifdetail:'📋 Detail Verifikasi',
+      trending:'🔥 Trending', hashtag:'#️⃣ ' + (view.trendingHashtag || '')
+    };
+    const hdr = document.createElement('div');
+    hdr.className = 'back-header';
+    hdr.innerHTML = '<button class="back-btn" id="backBtn">←</button><div class="title">' + esc(titles[view.screen] || '') + '</div>';
+    app.appendChild(hdr);
+    setTimeout(function(){ const b = $('backBtn'); if (b) b.onclick = goBack; }, 10);
+  } else {
+    const isProfileView = view.screen === 'profile' || view.screen === 'userprofile';
+    const hdr = document.createElement('div');
+    hdr.className = 'header';
+    let extraBtn = '';
+    if (isProfileView && view.screen === 'profile') {
+      extraBtn = '<button class="icon-btn" id="settingsBtn">⚙️</button>';
+    } else if (view.screen === 'userprofile') {
+      extraBtn = '<button class="icon-btn" id="backProfBtn" style="background:rgba(255,107,53,.15)">←</button>';
+    } else {
+      extraBtn = '<button class="icon-btn" id="themeBtn">' + (isDark ? '☀️' : '🌙') + '</button>' +
+                 '<button class="icon-btn online-btn" id="onlineBtn" title="User Online">🟢' + (onlineCount > 0 ? '<span class="badge green">' + (onlineCount > 99 ? '99+' : onlineCount) + '</span>' : '') + '</button>' +
+                 '<button class="icon-btn" id="trendingBtn" title="Trending">🔥</button>' +
+                 '<button class="icon-btn" id="notifBtn">🔔' + (unN ? '<span class="badge">' + (unN > 9 ? '9+' : unN) + '</span>' : '') + '</button>';
+    }
+    hdr.innerHTML = '<div style="flex:1"><div class="logo">Temu Kawan' + (currentMe.isFounder ? ' 👑' : '') + '</div>' +
+      '<div class="logo-sub">Menyapa Bebual Bersama</div></div>' +
+      extraBtn +
+      avatarHtml(currentMe, '');
+    app.appendChild(hdr);
+    setTimeout(function(){
+      const tb = $('themeBtn'); if (tb) tb.onclick = toggleTheme;
+      const ob = $('onlineBtn'); if (ob) ob.onclick = openOnlineModal;
+      const trb = $('trendingBtn'); if (trb) trb.onclick = function(){ go('trending'); };
+      const nb = $('notifBtn'); if (nb) nb.onclick = function(){ go('notif'); };
+      const sb = $('settingsBtn'); if (sb) sb.onclick = function(){ go('pengaturan'); };
+      const bp = $('backProfBtn'); if (bp) bp.onclick = function(){ go('feed'); };
+      const av = hdr.querySelector('.avatar');
+      if (av) av.onclick = function(){ go('profile'); };
+    }, 10);
+  }
+
+  const body = document.createElement('div');
+  body.id = 'pageBody';
+  app.appendChild(body);
+
+  if (view.screen === 'feed') renderFeed(body);
+  else if (view.screen === 'trending') renderTrending(body);
+  else if (view.screen === 'hashtag') renderHashtagPage(body, view.trendingHashtag);
+  else if (view.screen === 'search') renderSearch(body);
+  else if (view.screen === 'chat') renderChatList(body);
+  else if (view.screen === 'chatroom') renderChatRoom(body);
+  else if (view.screen === 'groups') renderGroupsList(body);
+  else if (view.screen === 'groupchat') renderGroupChat(body);
+  else if (view.screen === 'profile') renderProfile(body, myId, true);
+  else if (view.screen === 'userprofile') renderProfile(body, view.profileId, false);
+  else if (view.screen === 'notif') renderNotif(body);
+  else if (view.screen === 'pengaturan') renderPengaturan(body);
+  else if (view.screen === 'verifikasi') renderVerifikasi(body);
+  else if (view.screen === 'verifdetail') renderVerifDetail(body);
+  else if (view.screen === 'kelolauser') renderKelolaUser(body);
+  else if (view.screen === 'statistik') renderStatistik(body);
+  else if (view.screen === 'pusatakun') renderPusatAkun(body);
+  else if (view.screen === 'keamanan') renderKeamanan(body);
+  else if (view.screen === 'tentang') renderTentang(body);
+  else if (view.screen === 'sounds') renderSounds(body);
+
+  if (['profile','pengaturan','pusatakun','keamanan','tentang','sounds'].indexOf(view.screen) < 0) {
+    const footer = document.createElement('div');
+    footer.className = 'footer-copy';
+    footer.innerHTML = '© 2025 <b>Shank Anggara From Ulumonggo</b><br>All Rights Reserved';
+    app.appendChild(footer);
+  }
+
+  const nav = document.createElement('div');
+  nav.className = 'bottomnav';
+  nav.innerHTML = '<div class="inner">' +
+    '<button class="navbtn ' + (view.screen==='feed'?'active':'') + '" id="navHome"><span class="ic">🏠</span>Beranda</button>' +
+    '<button class="navbtn ' + (view.screen==='reels'?'active':'') + '" id="navReels"><span class="ic">🎬</span>Reels</button>' +
+    '<button class="navbtn create" id="navUpload"><span class="ic">+</span></button>' +
+    '<button class="navbtn ' + (view.screen==='search'?'active':'') + '" id="navSearch"><span class="ic">🔍</span>Cari</button>' +
+    '<button class="navbtn ' + (['profile','pengaturan','pusatakun','keamanan','tentang','sounds'].indexOf(view.screen)>=0?'active':'') + '" id="navProfile"><span class="ic">👤</span>Profil' + (unreadChats ? '<span class="badge" style="top:-2px;right:20%;">' + (unreadChats > 9 ? '9+' : unreadChats) + '</span>' : '') + '</button>' +
+    '</div>';
+  document.querySelectorAll('.bottomnav').forEach(function(n){n.remove();});
+  document.body.appendChild(nav);
+  setTimeout(function(){
+    const h = $('navHome'); if (h) h.onclick = function(){ go('feed'); };
+    const r = $('navReels'); if (r) r.onclick = function(){ go('reels'); };
+    const u = $('navUpload'); if (u) u.onclick = openUploadChoice;
+    const s = $('navSearch'); if (s) s.onclick = function(){ go('search'); };
+    const p = $('navProfile'); if (p) p.onclick = function(){ go('profile'); };
+  }, 10);
+
+  const scb = $('scrollTop');
+  if (scb) {
+    scb.onclick = function(){ window.scrollTo({ top:0, behavior:'smooth' }); };
+    window.onscroll = function(){
+      if (window.scrollY > 300) scb.classList.add('show');
+      else scb.classList.remove('show');
+    };
+  }
+}
+
+function go(screen, opts){
+  opts = opts || {};
+  for (const k in opts) view[k] = opts[k];
+  view.screen = screen;
+  if (screen !== 'chatroom') view.chatWith = null;
+  if (screen !== 'groupchat') view.groupId = null;
+  render();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function goBack(){
+  const backMap = {
+    pengaturan:'profile', pusatakun:'pengaturan', keamanan:'pengaturan', tentang:'pengaturan',
+    verifikasi:'pengaturan', verifdetail:'verifikasi', kelolauser:'pengaturan', statistik:'pengaturan',
+    userprofile:'feed', notif:'feed', groups:'chat', chatroom:'chat', groupchat:'groups',
+    sounds:'pengaturan', reels:'feed', trending:'feed', hashtag:'trending'
+  };
+  go(backMap[view.screen] || 'feed');
+}
+
+/* ============ FEED dengan TAB TIKTOK ============ */
+function renderFeed(root){
+  // Stories
+  const sw = document.createElement('div');
+  sw.className = 'stories';
+  const ids = [getMeId()].concat(me().following || []);
+  ids.slice(0, 12).forEach(function(uid2){
+    const u = user(uid2); if (!u) return;
+    const hasS = (state.stories[uid2]||[]).filter(function(s){return Date.now()-s.time < 86400000;}).length > 0;
+    const isMe = uid2 === getMeId();
+    const div = document.createElement('div');
+    div.className = 'story-item';
+    div.innerHTML = '<div class="story-ring ' + (hasS?'':'seen') + '">' + avatarHtml(u) + (isMe && !hasS ? '<div class="plus">+</div>' : '') + '</div><div class="lbl">' + (isMe ? 'Kamu' : esc(u.name.split(' ')[0])) + '</div>';
+    div.onclick = function(){
+      if (isMe && !hasS) openStoryCreator();
+      else if (hasS) openStoryViewer(uid2);
+      else toast('Belum ada status');
+    };
+    sw.appendChild(div);
+  });
+  root.appendChild(sw);
+
+  const trig = document.createElement('div');
+  trig.className = 'ct';
+  trig.innerHTML = avatarHtml(me(), 'sm') + '<div class="fake">Apa yang kamu pikirkan, ' + esc(me().name.split(' ')[0]) + '?</div><span style="font-size:20px">📷</span>';
+  trig.onclick = openCompose;
+  root.appendChild(trig);
+
+  // Tab TikTok
+  const tabs = document.createElement('div');
+  tabs.className = 'feed-tabs-tiktok';
+  const allCount = state.posts.length;
+  const followingIds = me().following || [];
+  const followingCount = state.posts.filter(function(p){ return followingIds.indexOf(p.authorId) >= 0 || p.authorId === getMeId(); }).length;
+
+  const t1 = document.createElement('button');
+  t1.className = 'feed-tab-tiktok ' + (view.feedTab==='all'?'active':'');
+  t1.innerHTML = 'Untuk Anda<span class="cnt">' + allCount + '</span>';
+  t1.onclick = function(){ view.feedTab='all'; renderFeedRefresh(); };
+
+  const t2 = document.createElement('button');
+  t2.className = 'feed-tab-tiktok ' + (view.feedTab==='following'?'active':'');
+  t2.innerHTML = 'Mengikuti<span class="cnt">' + followingCount + '</span>';
+  t2.onclick = function(){ view.feedTab='following'; renderFeedRefresh(); };
+
+  const t3 = document.createElement('button');
+  t3.className = 'feed-tab-tiktok ' + (view.feedTab==='trending'?'active':'');
+  t3.innerHTML = '🔥 Trending';
+  t3.onclick = function(){ view.feedTab='trending'; renderFeedRefresh(); };
+
+  tabs.appendChild(t1); tabs.appendChild(t2); tabs.appendChild(t3);
+  root.appendChild(tabs);
+
+  // Post list container
+  const listContainer = document.createElement('div');
+  listContainer.id = 'feedListContainer';
+  root.appendChild(listContainer);
+
+  renderFeedList(listContainer);
+}
+
+function renderFeedRefresh(){
+  const c = $('feedListContainer');
+  if (c) renderFeedList(c);
+  // Update tab aktif
+  const tabs = document.querySelectorAll('.feed-tab-tiktok');
+  tabs.forEach(function(t, i){
+    const isActive = (i === 0 && view.feedTab === 'all') || (i === 1 && view.feedTab === 'following') || (i === 2 && view.feedTab === 'trending');
+    t.classList.toggle('active', isActive);
+  });
+}
+
+function renderFeedList(container){
+  container.innerHTML = '';
+  let posts = state.posts.slice().sort(function(a,b){return b.time-a.time;});
+  if (view.feedTab === 'following') {
+    const f = me().following || [];
+    posts = posts.filter(function(p){return f.indexOf(p.authorId) >= 0 || p.authorId === getMeId();});
+  } else if (view.feedTab === 'trending') {
+    posts = posts.filter(function(p){ return p.likes.length > 0; });
+    posts.sort(function(a,b){ return b.likes.length - a.likes.length; });
+  }
+  if (!posts.length){
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = '<div class="big">📭</div><h4>Belum ada postingan</h4><p>Ikuti orang lain atau buat postingan pertamamu!</p>';
+    container.appendChild(empty);
+    return;
+  }
+  posts.forEach(function(p){ container.appendChild(buildPost(p)); });
+}
+
+function buildPost(p){
+  const a = user(p.authorId); if (!a) return document.createElement('div');
+  const isMine = p.authorId === getMeId();
+  const liked = p.likes.indexOf(getMeId()) >= 0;
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.innerHTML = '<div class="post-head">' + avatarHtml(a, isOnline(a.id)?'online':'') +
+    '<div class="info"><div class="name" id="name_' + p.id + '">' + nameWithBadge(a) + (a.isBot?'<span style="background:rgba(16,185,129,.15);color:var(--ok);font-size:9px;padding:1px 6px;border-radius:6px;font-weight:800;margin-left:3px">BOT</span>':'') + '</div>' +
+    '<div class="time">' + timeAgo(p.time) + '</div></div>' +
+    (isMine || me().isAdmin ? '<button class="icon-btn" style="width:32px;height:32px;font-size:14px" id="delPost_'+p.id+'">🗑️</button>' : '') +
+    '</div>' +
+    (p.text ? '<div class="post-text" id="ptext_' + p.id + '">' + highlightHashtag(p.text) + '</div>' : '') +
+    (p.image ? '<img class="post-img" src="' + p.image + '" id="img_' + p.id + '">' : '') +
+    '<div class="post-actions">' +
+      '<button class="act ' + (liked?'liked':'') + '" id="like_' + p.id + '"><span>' + (liked?'❤️':'🤍') + '</span>' + (p.likes.length||'') + '</button>' +
+      '<button class="act" id="cmt_' + p.id + '"><span>💬</span>' + (p.comments.length||'') + '</button>' +
+      '<button class="act" id="shr_' + p.id + '"><span>🔗</span></button>' +
+    '</div>' +
+    '<div class="comments" id="c_' + p.id + '">' +
+      p.comments.map(function(c){
+        const u = user(c.userId) || {name:'?',avatar:'❓'};
+        return '<div class="cmt">' + avatarHtml(u,'xs') + '<div class="body"><b>' + esc(u.name) + '</b>' + esc(c.text) + '</div></div>';
+      }).join('') +
+      '<div class="cmt-input">' + avatarHtml(me(),'xs') +
+      '<input id="ci_' + p.id + '" placeholder="Tulis komentar..." maxlength="150">' +
+      '<button id="cisend_' + p.id + '">➤</button></div>' +
+    '</div>';
+  setTimeout(function(){
+    const likeBtn = $('like_' + p.id);
+    const cmtBtn = $('cmt_' + p.id);
+    const shrBtn = $('shr_' + p.id);
+    const delBtn = $('delPost_' + p.id);
+    const imgBtn = $('img_' + p.id);
+    const nameBtn = $('name_' + p.id);
+    const cmtInput = $('ci_' + p.id);
+    const cmtSend = $('cisend_' + p.id);
+    const ptext = $('ptext_' + p.id);
+    if (likeBtn) likeBtn.onclick = function(){ toggleLike(p.id); };
+    if (cmtBtn) cmtBtn.onclick = function(){ const c = $('c_' + p.id); if (c) c.classList.toggle('open'); };
+    if (shrBtn) shrBtn.onclick = function(){ sharePost(p.id); };
+    if (delBtn) delBtn.onclick = function(){ deletePost(p.id); };
+    if (imgBtn) imgBtn.onclick = function(){ viewImage(p.id); };
+    if (nameBtn) nameBtn.onclick = function(){ go('userprofile', { profileId: a.id }); };
+    if (cmtInput) cmtInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') addComment(p.id); });
+    if (cmtSend) cmtSend.onclick = function(){ addComment(p.id); };
+    if (ptext) {
+      ptext.querySelectorAll('.hashtag').forEach(function(el){
+        el.onclick = function(){ go('hashtag', { trendingHashtag: el.dataset.tag }); };
+      });
+    }
+  }, 10);
+  return el;
+}
+
+window.viewImage = function(postId){
+  const p = state.posts.find(function(x){return x.id === postId;});
+  if (!p || !p.image) return;
+  const m = document.createElement('div');
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px';
+  m.innerHTML = '<img src="' + p.image + '" style="max-width:100%;max-height:100%;border-radius:16px;object-fit:contain"><button style="position:absolute;top:20px;right:20px;width:44px;height:44px;background:rgba(255,255,255,.2);color:#fff;border-radius:50%;font-size:24px;border:none;cursor:pointer">✕</button>';
+  m.onclick = function(e){ if (e.target === m || e.target.tagName === 'BUTTON') m.remove(); };
+  document.body.appendChild(m);
+};
+
+function toggleLike(id){
+  const p = state.posts.find(function(x){return x.id === id;}); if (!p) return;
+  const meId = getMeId();
+  const i = p.likes.indexOf(meId);
+  if (i >= 0) p.likes.splice(i, 1);
+  else { p.likes.push(meId); if (p.authorId !== meId) pushNotif(p.authorId, 'like', { by: meId }); }
+  saveState(); render();
+}
+function addComment(id){
+  const inp = $('ci_' + id); if (!inp) return;
+  const text = inp.value.trim(); if (!text) return;
+  const p = state.posts.find(function(x){return x.id === id;}); if (!p) return;
+  p.comments.push({ userId: getMeId(), text: text, time: Date.now() });
+  if (p.authorId !== getMeId()) pushNotif(p.authorId, 'comment', { by: getMeId(), text: text });
+  inp.value = ''; saveState(); render();
+  setTimeout(function(){ const c = $('c_' + id); if (c) c.classList.add('open'); }, 30);
+}
+function deletePost(id){
+  if (!confirm('Hapus postingan ini?')) return;
+  state.posts = state.posts.filter(function(x){return x.id !== id;});
+  saveState(); render(); toast('Postingan dihapus');
+}
+function sharePost(id){
+  const p = state.posts.find(function(x){return x.id === id;}); if (!p) return;
+  const txt = (p.text || '[Foto]') + ' — dari Temu Kawan';
+  if (navigator.share) navigator.share({ title:'Temu Kawan', text: txt }).catch(function(){});
+  else { if (navigator.clipboard) navigator.clipboard.writeText(txt); toast('Teks dicopy 📋'); }
+}
+
+/* ============ TRENDING PAGE ============ */
+function renderTrending(root){
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '🔥 Trending Sekarang';
+  root.appendChild(h);
+
+  // Hashtag trending
+  const trendingTags = getTrendingHashtags(10);
+  const hTag = document.createElement('div');
+  hTag.className = 'section-title';
+  hTag.style.marginTop = '14px';
+  hTag.innerHTML = '#️⃣ Hashtag Trending';
+  root.appendChild(hTag);
+
+  if (!trendingTags.length) {
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.style.padding = '20px';
+    e.innerHTML = '<p style="font-size:12px">Belum ada hashtag trending</p>';
+    root.appendChild(e);
+  } else {
+    trendingTags.forEach(function(t){
+      const el = document.createElement('div');
+      el.className = 'hashtag-item';
+      el.innerHTML = '<div class="ht-icon">#</div>' +
+        '<div class="ht-info"><div class="ht-name">#' + esc(t.tag) + '</div>' +
+        '<div class="ht-count">' + t.count + ' postingan • ' + t.likes + ' like</div></div>' +
+        '<div class="ht-arrow">›</div>';
+      el.onclick = function(){ go('hashtag', { trendingHashtag: t.tag }); };
+      root.appendChild(el);
+    });
+  }
+
+  // Top posts
+  const topPosts = state.posts.slice().filter(function(p){ return p.likes.length > 0; }).sort(function(a,b){ return b.likes.length - a.likes.length; }).slice(0, 10);
+  const hPost = document.createElement('div');
+  hPost.className = 'section-title';
+  hPost.style.marginTop = '20px';
+  hPost.innerHTML = '❤️ Postingan Paling Disukai';
+  root.appendChild(hPost);
+  if (!topPosts.length) {
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.style.padding = '20px';
+    e.innerHTML = '<p style="font-size:12px">Belum ada postingan populer</p>';
+    root.appendChild(e);
+  } else {
+    topPosts.forEach(function(p){ root.appendChild(buildPost(p)); });
+  }
+}
+
+function renderHashtagPage(root, tag){
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '#️⃣ #' + esc(tag);
+  root.appendChild(h);
+  const posts = state.posts.filter(function(p){
+    return p.text && extractHashtags(p.text).indexOf(tag.toLowerCase()) >= 0;
+  }).sort(function(a,b){ return b.time - a.time; });
+  if (!posts.length) {
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.innerHTML = '<div class="big">#️⃣</div><h4>Tidak ada postingan</h4>';
+    root.appendChild(e);
+    return;
+  }
+  posts.forEach(function(p){ root.appendChild(buildPost(p)); });
+}
+</script>
+<script>
+/* ============================================================
+   TEMU KAWAN PRO v8.0 - PART 2
+   Created by Shank Anggara From Ulumonggo
+   © 2025. All Rights Reserved.
+============================================================ */
+
+/* ============ REELS FULLSCREEN ============ */
+function renderReelsFullscreen(app){
+  const container = document.createElement('div');
+  container.className = 'reels-container';
+  container.id = 'reelsContainer';
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'reels-back-btn';
+  backBtn.innerHTML = '←';
+  backBtn.onclick = function(){ go('feed'); };
+
+  const reels = (state.reels || []).slice().sort(function(a,b){return b.time-a.time;});
+  if (!reels.length) {
+    container.innerHTML = '<div style="color:#fff;text-align:center;padding:100px 20px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+      '<div style="font-size:80px;margin-bottom:20px">🎬</div>' +
+      '<h2 style="margin-bottom:10px">Belum ada Reels</h2>' +
+      '<p style="opacity:.7;margin-bottom:20px">Upload video pendek pertamamu!</p>' +
+      '<button class="btn" style="max-width:200px;background:linear-gradient(135deg,#ff6b35,#a855f7)" id="upReelEmpty">➕ Upload Reel</button>' +
+      '</div>';
+    app.appendChild(container);
+    app.appendChild(backBtn);
+    setTimeout(function(){
+      const b = $('upReelEmpty');
+      if (b) b.onclick = function(){ go('feed'); setTimeout(openUploadReel, 300); };
+    }, 10);
+    return;
+  }
+
+  reels.forEach(function(r){
+    const a = user(r.authorId); if (!a) return;
+    const isMine = r.authorId === getMeId();
+    const liked = r.likes.indexOf(getMeId()) >= 0;
+
+    const reel = document.createElement('div');
+    reel.className = 'reel-full';
+
+    let soundHtml = '';
+    if (r.soundId) {
+      const snd = getSoundById(r.soundId);
+      if (snd) soundHtml = '<div style="position:absolute;top:70px;right:16px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);color:#fff;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;display:flex;gap:6px;align-items:center">' + (snd.icon||'🎵') + ' ' + esc(snd.name) + '</div>';
+    }
+
+    reel.innerHTML = '<video src="' + r.video + '" loop playsinline muted preload="metadata"></video>' + soundHtml +
+      '<div class="reel-actions">' +
+        '<button class="reel-act ' + (liked?'liked':'') + '" data-reel-act="like" data-id="' + r.id + '"><span>' + (liked?'❤️':'🤍') + '</span><span class="cnt">' + r.likes.length + '</span></button>' +
+        '<button class="reel-act" data-reel-act="share" data-id="' + r.id + '"><span>🔗</span><span class="cnt">Bagikan</span></button>' +
+        (isMine ? '<button class="reel-act" data-reel-act="del" data-id="' + r.id + '"><span>🗑️</span></button>' : '') +
+      '</div>' +
+      '<div class="reel-overlay">' +
+        '<div class="reel-user">' + avatarHtml(a, 'sm') + '<span class="name">' + nameWithBadge(a) + '</span></div>' +
+        (r.caption ? '<div class="reel-caption">' + esc(r.caption) + '</div>' : '') +
+        '<div style="font-size:11px;opacity:.7">' + timeAgo(r.time) + '</div>' +
+      '</div>';
+
+    reel.querySelectorAll('[data-reel-act]').forEach(function(btn){
+      btn.onclick = function(e){
+        e.stopPropagation();
+        const act = btn.dataset.reelAct;
+        const rid = btn.dataset.id;
+        if (act === 'like') toggleReelLike(rid);
+        else if (act === 'share') shareReel(rid);
+        else if (act === 'del') deleteReel(rid);
+      };
+    });
+
+    container.appendChild(reel);
+  });
+
+  app.appendChild(container);
+  app.appendChild(backBtn);
+
+  setTimeout(function(){
+    const videos = container.querySelectorAll('video');
+    if (reelObserver) reelObserver.disconnect();
+    reelObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) entry.target.play().catch(function(){});
+        else entry.target.pause();
+      });
+    }, { threshold: 0.6 });
+    videos.forEach(function(v){ reelObserver.observe(v); });
+  }, 100);
+}
+
+function getSoundById(id){
+  if (!id) return null;
+  let s = BUILTIN_SOUNDS.find(function(x){ return x.id === id; });
+  if (s) return s;
+  return (state.customSounds||[]).find(function(x){ return x.id === id; });
+}
+function shareReel(id){
+  const r = state.reels.find(function(x){return x.id === id;}); if (!r) return;
+  const a = user(r.authorId);
+  const txt = (r.caption || 'Reel dari Temu Kawan') + ' — oleh ' + (a ? a.name : '');
+  if (navigator.share) navigator.share({ title:'Temu Kawan Reels', text: txt }).catch(function(){});
+  else { if (navigator.clipboard) navigator.clipboard.writeText(txt); toast('Teks dicopy 📋'); }
+}
+function toggleReelLike(id){
+  const r = (state.reels||[]).find(function(x){return x.id === id;}); if (!r) return;
+  const i = r.likes.indexOf(getMeId());
+  if (i >= 0) r.likes.splice(i, 1); else r.likes.push(getMeId());
+  saveState(); render();
+}
+function deleteReel(id){
+  if (!confirm('Hapus reel ini?')) return;
+  state.reels = (state.reels||[]).filter(function(x){return x.id !== id;});
+  saveState(); render();
+}
+
+function openUploadReel(){
+  pendingVideo = null;
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  let soundList = '<option value="">🔇 Tanpa Sound</option>';
+  BUILTIN_SOUNDS.forEach(function(s){
+    soundList += '<option value="' + s.id + '">' + (s.icon||'🎵') + ' ' + s.name + '</option>';
+  });
+  (state.customSounds||[]).forEach(function(s){
+    soundList += '<option value="' + s.id + '">🎤 ' + esc(s.name) + '</option>';
+  });
+  m.innerHTML = '<div class="modal"><h3>🎬 Upload Reel</h3>' +
+    '<label>Video (maks 5MB)</label>' +
+    '<button class="mini-btn" style="width:100%;padding:12px;margin-bottom:14px" id="pickVidBtn">📹 Pilih Video</button>' +
+    '<input type="file" id="reelFile" accept="video/*" style="display:none">' +
+    '<div id="vidPreview" style="display:none;margin-bottom:12px"><video id="vidPrevEl" controls style="width:100%;border-radius:14px;max-height:280px"></video></div>' +
+    '<label>Caption</label><input class="field" id="reelCap" placeholder="Tulis caption... #hashtag" maxlength="120">' +
+    '<label>🎵 Sound</label>' +
+    '<select class="field" id="reelSound" style="background:var(--card)">' + soundList + '</select>' +
+    '<button class="btn" id="reelPost" disabled>Upload</button>' +
+    '<button class="btn sec" id="reelCancel" style="margin-top:8px">Batal</button></div>';
+  document.body.appendChild(m);
+  $('pickVidBtn').onclick = function(){ $('reelFile').click(); };
+  $('reelCancel').onclick = function(){ m.remove(); };
+  $('reelFile').onchange = function(e){
+    const f = e.target.files[0]; if (!f) return;
+    if (f.size > 5 * 1024 * 1024) { toast('⚠️ Video maks 5MB'); return; }
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      pendingVideo = ev.target.result;
+      $('vidPrevEl').src = pendingVideo;
+      $('vidPreview').style.display = 'block';
+      $('reelPost').disabled = false;
+    };
+    reader.readAsDataURL(f);
+  };
+  $('reelPost').onclick = function(){
+    if (!pendingVideo) return toast('Pilih video dulu');
+    if (!state.reels) state.reels = [];
+    const sid = $('reelSound').value || null;
+    state.reels.unshift({
+      id: uid('r'), authorId: getMeId(), video: pendingVideo,
+      caption: $('reelCap').value.trim(), soundId: sid,
+      likes: [], comments: [], time: Date.now()
+    });
+    saveState(); m.remove(); toast('Reel diupload! 🎬'); go('reels');
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+/* ============ SOUND COMMUNITY ============ */
+function renderSounds(root){
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '🎵 Sound Community';
+  root.appendChild(h);
+
+  const info = document.createElement('div');
+  info.style.cssText = 'background:rgba(255,107,53,.08);border-radius:14px;padding:12px;font-size:12px;line-height:1.6;margin-bottom:14px;color:var(--muted)';
+  info.innerHTML = '💡 Sound khas <b>Temu Kawan</b>. Rekam atau upload suara sendiri.';
+  root.appendChild(info);
+
+  const recBtn = document.createElement('button');
+  recBtn.className = 'btn';
+  recBtn.style.marginBottom = '10px';
+  recBtn.textContent = '🎤 Rekam Sound Sendiri';
+  recBtn.onclick = openRecordSound;
+  root.appendChild(recBtn);
+
+  const upBtn = document.createElement('button');
+  upBtn.className = 'btn sec';
+  upBtn.style.marginBottom = '14px';
+  upBtn.textContent = '📤 Upload Sound (MP3)';
+  upBtn.onclick = openUploadSound;
+  root.appendChild(upBtn);
+
+  const h1 = document.createElement('div');
+  h1.className = 'section-title';
+  h1.innerHTML = '🔊 Sound Bawaan';
+  root.appendChild(h1);
+
+  BUILTIN_SOUNDS.forEach(function(s){
+    const el = document.createElement('div');
+    el.className = 'sound-card';
+    el.innerHTML = '<div class="sc-icon">' + s.icon + '</div>' +
+      '<div class="sc-info"><div class="sc-name">' + s.name + '</div><div class="sc-sub">Bawaan Temu Kawan</div></div>' +
+      '<button class="sc-btn" data-sound="' + s.id + '">▶️</button>';
+    root.appendChild(el);
+    setTimeout(function(){
+      const b = el.querySelector('[data-sound]');
+      if (b) b.onclick = function(){ playSoundEffect(s.freq, s.dur); toast('🔊 ' + s.name); };
+    }, 10);
+  });
+
+  const custom = (state.customSounds||[]).slice().sort(function(a,b){return b.time-a.time;});
+  const h2 = document.createElement('div');
+  h2.className = 'section-title';
+  h2.style.marginTop = '20px';
+  h2.innerHTML = '🎧 Sound Komunitas <span class="num">' + custom.length + '</span>';
+  root.appendChild(h2);
+
+  if (!custom.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.style.padding = '20px';
+    empty.innerHTML = '<p style="font-size:12px">Belum ada sound komunitas</p>';
+    root.appendChild(empty);
+  } else {
+    custom.forEach(function(s){
+      const el = document.createElement('div');
+      el.className = 'sound-card';
+      const uploader = user(s.by) || { name: 'Anonim' };
+      el.innerHTML = '<div class="sc-icon">🎤</div>' +
+        '<div class="sc-info"><div class="sc-name">' + esc(s.name) + '</div><div class="sc-sub">Oleh ' + esc(uploader.name) + ' • ' + timeAgo(s.time) + '</div></div>' +
+        '<button class="sc-btn" data-csound="' + s.id + '">▶️</button>';
+      root.appendChild(el);
+      setTimeout(function(){
+        const b = el.querySelector('[data-csound]');
+        if (b) b.onclick = function(){ playCustomSound(s, b); };
+      }, 10);
+    });
+  }
+}
+
+function playCustomSound(s, btn){
+  if (soundAudioEl) { try { soundAudioEl.pause(); } catch(e){} soundAudioEl = null; }
+  if (btn.classList.contains('playing')) {
+    btn.classList.remove('playing'); btn.textContent = '▶️';
+    return;
+  }
+  soundAudioEl = new Audio(s.url);
+  soundAudioEl.play().then(function(){
+    btn.classList.add('playing'); btn.textContent = '⏸';
+    soundAudioEl.onended = function(){ btn.classList.remove('playing'); btn.textContent = '▶️'; };
+  }).catch(function(){ toast('⚠️ Gagal putar sound'); });
+}
+
+async function openRecordSound(){
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = '<div class="modal"><h3>🎤 Rekam Sound</h3>' +
+    '<p style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px">Maks 15 detik</p>' +
+    '<div style="text-align:center;font-size:60px;margin-bottom:14px" id="recIcon">🎤</div>' +
+    '<div style="text-align:center;font-size:24px;font-weight:900;color:var(--p1);margin-bottom:14px" id="recTimeSound">0.0 dtk</div>' +
+    '<label>Nama Sound</label><input class="field" id="soundName" placeholder="Contoh: Suara hujan" maxlength="40">' +
+    '<button class="btn" id="recStart">🎤 Mulai Rekam</button>' +
+    '<button class="btn sec" id="recCancel" style="margin-top:8px">Batal</button></div>';
+  document.body.appendChild(m);
+  let soundRecorder = null;
+  let soundChunks = [];
+  let soundTimer = null;
+  let soundStart = 0;
+  $('recCancel').onclick = function(){ m.remove(); };
+  $('recStart').onclick = async function(){
+    if (soundRecorder && soundRecorder.state === 'recording') { soundRecorder.stop(); return; }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      soundChunks = [];
+      soundRecorder = new MediaRecorder(stream);
+      soundRecorder.ondataavailable = function(e){ if (e.data.size > 0) soundChunks.push(e.data); };
+      soundRecorder.onstop = function(){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        clearInterval(soundTimer);
+        const blob = new Blob(soundChunks, { type: 'audio/webm' });
+        if (blob.size < 500) { toast('Rekaman pendek'); return; }
+        const reader = new FileReader();
+        reader.onload = function(){
+          const url = reader.result;
+          if (url.length > 700000) { toast('Terlalu panjang'); return; }
+          const name = $('soundName').value.trim() || ('Sound ' + new Date().toLocaleTimeString('id-ID'));
+          if (!state.customSounds) state.customSounds = [];
+          state.customSounds.unshift({ id: uid('snd'), name: name, url: url, by: getMeId(), time: Date.now() });
+          saveState(); m.remove();
+          toast('🎤 Sound direkam!');
+          render();
+        };
+        reader.readAsDataURL(blob);
+      };
+      soundRecorder.start();
+      soundStart = Date.now();
+      $('recStart').textContent = '⏹ Stop & Simpan';
+      $('recIcon').textContent = '🔴';
+      soundTimer = setInterval(function(){
+        const t = (Date.now() - soundStart)/1000;
+        $('recTimeSound').textContent = t.toFixed(1) + ' dtk';
+        if (t >= 15) soundRecorder.stop();
+      }, 100);
+    } catch(e){ toast('❌ Mikrofon tidak diizinkan'); }
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+function openUploadSound(){
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = '<div class="modal"><h3>📤 Upload Sound</h3>' +
+    '<div style="background:rgba(239,68,68,.08);border-radius:12px;padding:12px;font-size:12px;line-height:1.6;margin-bottom:14px">' +
+    '⚠️ <b>Hanya sound ciptaan sendiri atau bebas royalti.</b></div>' +
+    '<label>Nama Sound</label><input class="field" id="upSoundName" placeholder="Contoh: Beat keren" maxlength="40">' +
+    '<label>File Sound (MP3, maks 2MB)</label>' +
+    '<button class="mini-btn" style="width:100%;padding:12px;margin-bottom:14px" id="pickSoundBtn">🎵 Pilih File</button>' +
+    '<input type="file" id="soundFile" accept="audio/*" style="display:none">' +
+    '<div id="soundSel" style="font-size:12px;color:var(--ok);margin-bottom:12px;display:none">✅ File siap</div>' +
+    '<button class="btn" id="soundUpload" disabled>Upload</button>' +
+    '<button class="btn sec" id="soundCancel" style="margin-top:8px">Batal</button></div>';
+  document.body.appendChild(m);
+  let pendingSound = null;
+  $('pickSoundBtn').onclick = function(){ $('soundFile').click(); };
+  $('soundCancel').onclick = function(){ m.remove(); };
+  $('soundFile').onchange = function(e){
+    const f = e.target.files[0]; if (!f) return;
+    if (f.size > 2 * 1024 * 1024) { toast('⚠️ Maks 2MB'); return; }
+    const r = new FileReader();
+    r.onload = function(ev){
+      pendingSound = ev.target.result;
+      $('soundSel').style.display = 'block';
+      $('soundUpload').disabled = false;
+    };
+    r.readAsDataURL(f);
+  };
+  $('soundUpload').onclick = function(){
+    const name = $('upSoundName').value.trim();
+    if (!name) return toast('Isi nama sound');
+    if (!pendingSound) return toast('Pilih file');
+    if (!state.customSounds) state.customSounds = [];
+    state.customSounds.unshift({ id: uid('snd'), name: name, url: pendingSound, by: getMeId(), time: Date.now() });
+    saveState(); m.remove();
+    toast('🎵 Sound diupload!');
+    render();
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+/* ============ COMPOSE ============ */
+function openCompose(){
+  pendingImage = null;
+  currentFilter = { brightness:100, contrast:100, saturate:100, hue:0, blur:0, effect:'none', sticker:'' };
+  const m = document.createElement('div');
+  m.className = 'modal-bg open'; m.id = 'composeModal';
+  m.innerHTML = '<div class="modal"><h3>✍️ Buat Postingan</h3>' +
+    '<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">' + avatarHtml(me(),'sm') + '<div style="font-weight:700">' + esc(me().name) + '</div></div>' +
+    '<textarea class="field" id="compText" placeholder="Apa yang kamu pikirkan? #hashtag" maxlength="500" style="min-height:80px;resize:none;font-family:inherit"></textarea>' +
+    '<div style="display:flex;gap:8px;margin-bottom:14px">' +
+      '<button class="mini-btn" style="flex:1;padding:11px" id="btnCamera">📷 Kamera</button>' +
+      '<button class="mini-btn" style="flex:1;padding:11px;background:rgba(255,107,53,.1);color:var(--txt)" id="btnGallery">🖼️ Galeri</button>' +
+    '</div>' +
+    '<input type="file" id="compCam" accept="image/*" capture="environment" style="display:none">' +
+    '<input type="file" id="compGal" accept="image/*" style="display:none">' +
+    '<div class="img-prev" id="imgPrev"><img id="imgPrevEl"><button id="rmImgBtn">✕</button></div>' +
+    '<div id="filterPanel" style="display:none">' +
+    '<label style="font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:8px">🎨 Filter Foto</label>' +
+    '<div class="filter-grid" id="fxGrid">' +
+    ['none|🌟|Normal','grayscale|⚫|B&W','sepia|🟤|Sepia','vintage|📷|Vintage','cool|❄️|Cool','warm|🔥|Warm'].map(function(s){
+      const p = s.split('|');
+      return '<div class="filter-item' + (p[0]==='none'?' sel':'') + '" data-fx="' + p[0] + '"><span class="fi">' + p[1] + '</span>' + p[2] + '</div>';
+    }).join('') +
+    '</div>' +
+    '<div class="filter-slider"><label>☀️ Kecerahan: <span id="vBright">100</span>%</label><input type="range" id="fxBright" min="50" max="150" value="100"></div>' +
+    '<div class="filter-slider"><label>🎨 Kontras: <span id="vContrast">100</span>%</label><input type="range" id="fxContrast" min="50" max="150" value="100"></div>' +
+    '<div class="filter-slider"><label>🌈 Saturasi: <span id="vSaturate">100</span>%</label><input type="range" id="fxSaturate" min="0" max="200" value="100"></div>' +
+    '<div class="filter-slider"><label>🌫️ Blur: <span id="vBlur">0</span>px</label><input type="range" id="fxBlur" min="0" max="5" value="0"></div>' +
+    '<label style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">😀 Stiker</label>' +
+    '<div class="sticker-row" id="stkRow">' +
+    ['', '😀','😎','❤️','🔥','⭐','🌸','🎉','☕','🍕','🐱','🐶','🦄'].map(function(s){
+      return '<button type="button" data-stk="' + s + '" class="' + (s===''?'sel':'') + '">' + (s || '❌') + '</button>';
+    }).join('') +
+    '</div></div>' +
+    '<button class="btn" id="compPost" disabled>Posting</button>' +
+    '<button class="btn sec" id="compCancel" style="margin-top:8px">Batal</button></div>';
+  document.body.appendChild(m);
+  const text = $('compText'), btn = $('compPost');
+  text.addEventListener('input', function(){ btn.disabled = !text.value.trim() && !pendingImage; });
+  text.focus();
+  $('btnCamera').onclick = function(){ $('compCam').click(); };
+  $('btnGallery').onclick = function(){ $('compGal').click(); };
+  $('compCancel').onclick = closeCompose;
+  $('rmImgBtn').onclick = function(){ pendingImage = null; $('imgPrev').classList.remove('show'); $('filterPanel').style.display = 'none'; btn.disabled = !text.value.trim(); };
+  const handleFile = function(e){
+    const f = e.target.files[0]; if (!f) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const img = new Image();
+      img.onload = function(){
+        const sc = Math.min(1, 900 / img.width);
+        const c = document.createElement('canvas');
+        c.width = img.width * sc; c.height = img.height * sc;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        pendingImage = c.toDataURL('image/jpeg', 0.85);
+        $('imgPrevEl').src = pendingImage;
+        $('imgPrev').classList.add('show');
+        $('filterPanel').style.display = 'block';
+        btn.disabled = false;
+        applyFilterPreview();
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(f);
+  };
+  $('compCam').onchange = handleFile;
+  $('compGal').onchange = handleFile;
+  $('fxGrid').onclick = function(e){
+    const b = e.target.closest('.filter-item'); if (!b) return;
+    this.querySelectorAll('.filter-item').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel'); currentFilter.effect = b.dataset.fx;
+    applyFilterPreview();
+  };
+  $('fxBright').oninput = function(){ currentFilter.brightness = this.value; $('vBright').textContent = this.value; applyFilterPreview(); };
+  $('fxContrast').oninput = function(){ currentFilter.contrast = this.value; $('vContrast').textContent = this.value; applyFilterPreview(); };
+  $('fxSaturate').oninput = function(){ currentFilter.saturate = this.value; $('vSaturate').textContent = this.value; applyFilterPreview(); };
+  $('fxBlur').oninput = function(){ currentFilter.blur = this.value; $('vBlur').textContent = this.value; applyFilterPreview(); };
+  $('stkRow').onclick = function(e){
+    const b = e.target.closest('button'); if (!b) return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel'); currentFilter.sticker = b.dataset.stk;
+    applyFilterPreview();
+  };
+  btn.onclick = async function(){
+    const t = text.value.trim();
+    if (!t && !pendingImage) return;
+    let finalImg = pendingImage;
+    if (pendingImage) finalImg = await applyFilterToBase64(pendingImage);
+    state.posts.unshift({ id: uid('p'), authorId: getMeId(), text: t, image: finalImg, likes: [], comments: [], time: Date.now() });
+    saveState(); closeCompose(); go('feed');
+    toast('Postingan dibuat! 🎉');
+  };
+  m.onclick = function(e){ if (e.target === m) closeCompose(); };
+}
+
+function applyFilterPreview(){
+  const el = $('imgPrevEl'); if (!el) return;
+  el.style.filter = buildFilter();
+}
+
+async function applyFilterToBase64(dataUrl){
+  return new Promise(function(res, rej){
+    const img = new Image();
+    img.onload = function(){
+      const c = document.createElement('canvas');
+      c.width = img.width; c.height = img.height;
+      const ctx = c.getContext('2d');
+      ctx.filter = buildFilter();
+      ctx.drawImage(img, 0, 0);
+      if (currentFilter.sticker) {
+        ctx.filter = 'none';
+        ctx.font = (c.width * 0.15) + 'px serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(currentFilter.sticker, c.width - 20, c.height - 20);
+      }
+      res(c.toDataURL('image/jpeg', 0.8));
+    };
+    img.onerror = rej; img.src = dataUrl;
+  });
+}
+function closeCompose(){ const m = $('composeModal'); if (m) m.remove(); pendingImage = null; }
+
+/* ============ STORY ============ */
+function openStoryCreator(){
+  let storyEmoji = '😊';
+  const m = document.createElement('div');
+  m.className = 'modal-bg open'; m.id = 'storyModal';
+  m.innerHTML = '<div class="modal"><h3>✨ Buat Status</h3>' +
+    '<p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:14px">Hilang otomatis 24 jam</p>' +
+    '<div class="emoji-pick" id="stEmoji">' + ['😊','😎','🔥','❤️','🎉','✨','☕','🌅','🎵','💪','🌈','🍕'].map(function(e,i){return '<button data-e="'+e+'" class="'+(i===0?'sel':'')+'">'+e+'</button>';}).join('') + '</div>' +
+    '<input class="field" id="stText" placeholder="Caption status..." maxlength="60">' +
+    '<button class="btn" id="stBtn">Bagikan</button>' +
+    '<button class="btn sec" id="stCancel" style="margin-top:8px">Batal</button></div>';
+  document.body.appendChild(m);
+  $('stEmoji').onclick = function(e){
+    const b = e.target.closest('button'); if (!b) return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel'); storyEmoji = b.dataset.e;
+  };
+  $('stCancel').onclick = function(){ m.remove(); };
+  $('stBtn').onclick = function(){
+    const txt = $('stText').value.trim();
+    if (!state.stories[getMeId()]) state.stories[getMeId()] = [];
+    state.stories[getMeId()].unshift({ id: uid('s'), emoji: storyEmoji, text: txt, time: Date.now(), seenBy: [] });
+    saveState(); m.remove();
+    toast('Status dibagikan! ✨'); render();
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+function openStoryViewer(userId){
+  const list = (state.stories[userId]||[]).filter(function(s){return Date.now()-s.time < 86400000;}).sort(function(a,b){return a.time-b.time;});
+  if (!list.length) return;
+  let idx = 0;
+  const u = user(userId);
+  const v = document.createElement('div');
+  v.style.cssText = 'position:fixed;inset:0;background:#000;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff';
+  document.body.appendChild(v);
+  function draw(){
+    const s = list[idx];
+    if (!s.seenBy) s.seenBy = [];
+    if (s.seenBy.indexOf(getMeId()) < 0) s.seenBy.push(getMeId());
+    saveState();
+    v.innerHTML = '<div style="position:absolute;top:20px;left:20px;right:20px;display:flex;gap:10px;align-items:center">' + avatarHtml(u,'sm') + '<div><div style="font-weight:800">' + esc(u.name) + '</div><div style="font-size:11px;opacity:.7">' + timeAgo(s.time) + '</div></div></div>' +
+      '<button id="stClose" style="position:absolute;top:20px;right:20px;color:#fff;font-size:26px;background:none;border:none">✕</button>' +
+      '<div style="font-size:120px" id="stNext">' + s.emoji + '</div>' +
+      (s.text ? '<div style="position:absolute;bottom:80px;left:20px;right:20px;text-align:center;font-size:18px;font-weight:600;padding:16px;background:rgba(0,0,0,.4);border-radius:16px">' + esc(s.text) + '</div>' : '');
+    setTimeout(function(){
+      const c = $('stClose'); if (c) c.onclick = closeStory;
+      const n = $('stNext'); if (n) n.onclick = nextStory;
+    }, 10);
+    clearTimeout(window._storyTimer);
+    window._storyTimer = setTimeout(nextStory, 5000);
+  }
+  function nextStory(){ if (idx < list.length-1) { idx++; draw(); } else closeStory(); }
+  function closeStory(){ clearTimeout(window._storyTimer); v.remove(); render(); }
+  draw();
+}
+
+/* ============ SEARCH ============ */
+function renderSearch(root){
+  const wrap = document.createElement('div');
+  wrap.innerHTML = '<input class="field" id="srchInput" placeholder="🔍 Cari orang...">';
+  root.appendChild(wrap);
+  const result = document.createElement('div');
+  result.id = 'srchResult';
+  root.appendChild(result);
+  function draw(q){
+    q = q || '';
+    result.innerHTML = '';
+    const meId = getMeId();
+    const ql = q.toLowerCase();
+    const users = Object.values(state.users).filter(function(u){
+      if (u.id === meId) return false;
+      if (!q) return true;
+      return u.name.toLowerCase().indexOf(ql) >= 0 || (u.email && u.email.toLowerCase().indexOf(ql) >= 0) || (u.bio && u.bio.toLowerCase().indexOf(ql) >= 0) || (u.username && u.username.indexOf(ql) >= 0);
+    });
+    users.sort(function(a,b){ return b.joinedAt - a.joinedAt; });
+    const uh = document.createElement('div');
+    uh.className = 'section-title';
+    uh.innerHTML = '👥 Orang <span class="num">' + users.length + '</span>';
+    result.appendChild(uh);
+    if (!users.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.style.padding = '20px';
+      empty.innerHTML = '<p>Tidak ditemukan</p>';
+      result.appendChild(empty);
+      return;
+    }
+    users.slice(0, 40).forEach(function(u){
+      const isF = me().following.indexOf(u.id) >= 0;
+      const isNew = Date.now() - u.joinedAt < 7 * 86400000;
+      const row = document.createElement('div');
+      row.className = 'user-row';
+      row.innerHTML = avatarHtml(u, isOnline(u.id)?'online':'') +
+        '<div class="info"><div class="name">' + nameWithBadge(u) + (u.isBot?'<span style="background:rgba(16,185,129,.15);color:var(--ok);font-size:9px;padding:1px 6px;border-radius:6px;font-weight:800">BOT</span>':'') + (isNew?'<span style="background:rgba(255,107,53,.15);color:var(--p1);font-size:9px;padding:1px 6px;border-radius:6px;font-weight:800">BARU</span>':'') + '</div>' +
+        '<div class="bio">' + esc(u.bio||'') + '</div></div>' +
+        '<button class="mini-btn ' + (isF?'following':'') + '" id="fol_' + u.id + '">' + (isF?'✓':'+ Ikuti') + '</button>';
+      result.appendChild(row);
+      setTimeout(function(){
+        const av = row.querySelector('.avatar');
+        const inf = row.querySelector('.info');
+        const fb = $('fol_' + u.id);
+        if (av) av.onclick = function(){ go('userprofile', { profileId: u.id }); };
+        if (inf) inf.onclick = function(){ go('userprofile', { profileId: u.id }); };
+        if (fb) fb.onclick = function(e){ e.stopPropagation(); toggleFollow(u.id); };
+      }, 10);
+    });
+  }
+  draw('');
+  $('srchInput').addEventListener('input', function(e){ draw(e.target.value.trim()); });
+}
+
+/* ============ FOLLOW ============ */
+function toggleFollow(userId){
+  if (userId === getMeId()) return;
+  const u = user(userId); if (!u) return;
+  const meU = me();
+  if (!meU.following) meU.following = [];
+  if (!u.followers) u.followers = [];
+  const i = meU.following.indexOf(userId);
+  if (i >= 0) {
+    meU.following.splice(i, 1);
+    u.followers = u.followers.filter(function(x){return x !== getMeId();});
+    toast('Batal ikuti ' + u.name);
+  } else {
+    meU.following.push(userId);
+    if (u.followers.indexOf(getMeId()) < 0) u.followers.push(getMeId());
+    pushNotif(userId, 'follow', { by: getMeId(), name: meU.name, avatar: meU.avatar, avatarPic: meU.avatarPic });
+    toast('Mengikuti ' + u.name + ' ✅');
+    if (u.isBot && (!u.following || u.following.indexOf(getMeId()) < 0)) {
+      setTimeout(function(){
+        if (!u.following) u.following = [];
+        u.following.push(getMeId());
+        if (!meU.followers) meU.followers = [];
+        if (meU.followers.indexOf(u.id) < 0) meU.followers.push(u.id);
+        pushNotif(getMeId(), 'follow', { by: u.id, name: u.name, avatar: u.avatar });
+        saveState();
+      }, 1500 + Math.random()*1500);
+    }
+  }
+  saveState(); render();
+}
+
+/* ============ PROFILE ============ */
+function renderProfile(root, userId, isMe){
+  const u = user(userId); if (!u) return;
+  const posts = state.posts.filter(function(p){return p.authorId === userId;}).sort(function(a,b){return b.time-a.time;});
+  const reels = (state.reels||[]).filter(function(r){return r.authorId === userId;});
+  const isF = !isMe && me().following.indexOf(userId) >= 0;
+
+  const hero = document.createElement('div');
+  hero.className = 'profile-hero-v2';
+  let metaHtml = '';
+  if (u.kota) metaHtml += '<span>📍 ' + esc(u.kota) + '</span>';
+  if (u.wa) metaHtml += '<span>📱 ' + esc(u.wa) + '</span>';
+
+  hero.innerHTML = '<div class="profile-cover" style="background-image:' + coverBg(u) + '">' +
+    '<div class="profile-cover-overlay"></div>' +
+    '</div>' +
+    '<div class="profile-header-info">' +
+      avatarHtml(u, '') +
+      '<div class="pname">' + nameWithBadge(u) + '</div>' +
+      (u.isFounder ? '<div style="font-size:11px;font-weight:800;color:#ffd700;text-shadow:0 1px 4px rgba(0,0,0,.7);margin-bottom:6px">👑 FOUNDER TEMU KAWAN</div>' : '') +
+      (u.verified && !u.isFounder ? '<div class="verified-badge" style="margin-bottom:8px">Terverifikasi</div>' : '') +
+      '<div class="pbio">' + esc(u.bio||'—') + '</div>' +
+      (metaHtml ? '<div class="pmeta">' + metaHtml + '</div>' : '') +
+    '</div>';
+
+  const bg = document.createElement('div');
+  bg.className = 'profile-bg';
+  bg.innerHTML = '<div class="stats">' +
+      '<div class="stat" id="stFoll"><div class="n">' + (u.followers||[]).length + '</div><div class="l">Pengikut</div></div>' +
+      '<div class="stat"><div class="n">' + posts.length + '</div><div class="l">Postingan</div></div>' +
+      '<div class="stat" id="stFollow"><div class="n">' + (u.following||[]).length + '</div><div class="l">Ikuti</div></div>' +
+    '</div>';
+
+  if (!isMe) {
+    const act = document.createElement('div');
+    act.style.cssText = 'display:flex;gap:8px;margin-bottom:14px';
+    const wa = u.wa ? u.wa.replace(/[^0-9]/g, '').replace(/^0/, '62') : '';
+    const waBtn = wa ? '<button class="btn wa" style="flex:1" id="waBtn">📞 WA</button>' : '';
+    act.innerHTML = '<button class="mini-btn ' + (isF?'following':'') + '" style="flex:1;padding:14px;font-size:14px;border-radius:16px" id="followBigBtn">' + (isF?'✓ Mengikuti':'+ Ikuti') + '</button>' +
+      '<button class="btn" style="flex:1" id="chatBtn">💬 Chat</button>' + waBtn;
+    bg.appendChild(act);
+    setTimeout(function(){
+      const fb = $('followBigBtn'); if (fb) fb.onclick = function(){ toggleFollow(userId); };
+      const cb = $('chatBtn'); if (cb) cb.onclick = function(){ go('chatroom', { chatWith: userId }); };
+      const wb = $('waBtn'); if (wb) wb.onclick = function(){
+        window.open('https://wa.me/' + wa + '?text=' + encodeURIComponent('Halo ' + u.name + ', saya dari Temu Kawan 👋'), '_blank');
+      };
+    }, 10);
+  }
+
+  bg.appendChild(document.createElement('div')).className = 'profile-tabs';
+  const tabs = bg.querySelector('.profile-tabs');
+  tabs.innerHTML = '<div class="profile-tab ' + (view.profileTab==='status'?'active':'') + '" id="ptStatus">📝 Status</div>' +
+    '<div class="profile-tab ' + (view.profileTab==='foto'?'active':'') + '" id="ptFoto">📷 Foto</div>' +
+    '<div class="profile-tab ' + (view.profileTab==='video'?'active':'') + '" id="ptVideo">🎬 Video</div>';
+
+  hero.appendChild(bg);
+  root.appendChild(hero);
+
+  setTimeout(function(){
+    const f1 = $('stFoll'); if (f1) f1.onclick = function(){ showUserList(userId, 'followers'); };
+    const f2 = $('stFollow'); if (f2) f2.onclick = function(){ showUserList(userId, 'following'); };
+    const s = $('ptStatus'); if (s) s.onclick = function(){ view.profileTab='status'; render(); };
+    const f = $('ptFoto'); if (f) f.onclick = function(){ view.profileTab='foto'; render(); };
+    const v = $('ptVideo'); if (v) v.onclick = function(){ view.profileTab='video'; render(); };
+  }, 10);
+
+  let items = [];
+  if (view.profileTab === 'status') items = posts.filter(function(p){return !p.image;});
+  else if (view.profileTab === 'foto') items = posts.filter(function(p){return p.image;});
+  else if (view.profileTab === 'video') items = reels;
+
+  if (!items.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    const icons = { status:'📝', foto:'📷', video:'🎬' };
+    const labels = { status:'status', foto:'foto', video:'video' };
+    empty.innerHTML = '<div class="big">' + icons[view.profileTab] + '</div><p>Belum ada ' + labels[view.profileTab] + '</p>';
+    root.appendChild(empty);
+    return;
+  }
+  if (view.profileTab === 'video') {
+    items.forEach(function(r){
+      const el = document.createElement('div');
+      el.style.cssText = 'background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow)';
+      el.innerHTML = '<video src="' + r.video + '" controls style="width:100%;display:block;max-height:500px;background:#000"></video>' +
+        '<div style="padding:12px 14px"><div style="font-size:11px;color:var(--muted)">' + timeAgo(r.time) + '</div></div>';
+      root.appendChild(el);
+    });
+  } else {
+    items.forEach(function(p){ root.appendChild(buildPost(p)); });
+  }
+}
+
+function openEditProfile(){
+  let picked = me().avatar;
+  pendingProfilePic = null;
+  pendingCoverPic = null;
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = '<div class="modal"><h3>✏️ Edit Profil</h3>' +
+    '<label>Background Profil</label>' +
+    '<div id="coverPreview" style="width:100%;height:120px;border-radius:14px;background:' + coverBg(me()) + ';background-size:cover;background-position:center;position:relative;margin-bottom:8px">' +
+      '<button class="mini-btn" style="position:absolute;bottom:8px;right:8px;padding:6px 12px" id="pickCoverBtn">📷 Ganti</button>' +
+    '</div>' +
+    '<input type="file" id="coverFile" accept="image/*" style="display:none">' +
+    '<div class="profile-pic-picker" style="display:flex;flex-direction:column;gap:10px;align-items:center;margin-bottom:16px">' +
+      '<div class="avatar lg" id="picPreview" style="width:88px;height:88px;font-size:44px">' + (me().avatarPic ? '<img src="' + me().avatarPic + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : me().avatar) + '</div>' +
+      '<button class="mini-btn" style="padding:8px 16px" id="pickPicBtn">📷 Ganti Avatar</button>' +
+    '</div>' +
+    '<input type="file" id="picFile" accept="image/*" style="display:none">' +
+    '<label>Nama</label><input class="field" id="epName" maxlength="20" value="' + esc(me().name) + '">' +
+    '<label>Bio</label><input class="field" id="epBio" maxlength="80" value="' + esc(me().bio||'') + '">' +
+    '<label>📱 Nomor WhatsApp</label><input class="field" id="epWA" placeholder="08xxxxxxxxxx" maxlength="15" value="' + esc(me().wa||'') + '">' +
+    '<label>📍 Kota</label><input class="field" id="epKota" placeholder="Contoh: Jakarta" maxlength="30" value="' + esc(me().kota||'') + '">' +
+    '<label>Atau pilih emoji</label>' +
+    '<div class="emoji-pick" id="epGrid">' + AVATARS.map(function(e){return '<button data-e="'+e+'" class="'+(e===me().avatar && !me().avatarPic?'sel':'')+'">'+e+'</button>';}).join('') + '</div>' +
+    '<button class="btn" id="epSave">Simpan</button>' +
+    '<button class="btn sec" id="epCancel" style="margin-top:8px">Batal</button></div>';
+  document.body.appendChild(m);
+  $('pickPicBtn').onclick = function(){ $('picFile').click(); };
+  $('pickCoverBtn').onclick = function(){ $('coverFile').click(); };
+  $('epCancel').onclick = function(){ m.remove(); };
+  $('picFile').onchange = function(e){
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = function(ev){
+      const img = new Image();
+      img.onload = function(){
+        const sc = Math.min(1, 400 / img.width);
+        const c = document.createElement('canvas');
+        c.width = img.width * sc; c.height = img.height * sc;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        pendingProfilePic = c.toDataURL('image/jpeg', 0.8);
+        $('picPreview').innerHTML = '<img src="' + pendingProfilePic + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+        m.querySelectorAll('#epGrid button').forEach(function(x){x.classList.remove('sel');});
+      };
+      img.src = ev.target.result;
+    };
+    r.readAsDataURL(f);
+  };
+  $('coverFile').onchange = function(e){
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = function(ev){
+      const img = new Image();
+      img.onload = function(){
+        const sc = Math.min(1, 1000 / img.width);
+        const c = document.createElement('canvas');
+        c.width = img.width * sc; c.height = img.height * sc;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        pendingCoverPic = c.toDataURL('image/jpeg', 0.8);
+        $('coverPreview').style.background = 'url(' + pendingCoverPic + ')';
+        $('coverPreview').style.backgroundSize = 'cover';
+        $('coverPreview').style.backgroundPosition = 'center';
+      };
+      img.src = ev.target.result;
+    };
+    r.readAsDataURL(f);
+  };
+  $('epGrid').onclick = function(e){
+    const b = e.target.closest('button'); if (!b) return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel'); picked = b.dataset.e; pendingProfilePic = null;
+    $('picPreview').innerHTML = picked;
+  };
+  $('epSave').onclick = function(){
+    me().name = $('epName').value.trim() || me().name;
+    me().bio = $('epBio').value.trim();
+    me().wa = $('epWA').value.trim();
+    me().kota = $('epKota').value.trim();
+    if (pendingProfilePic) me().avatarPic = pendingProfilePic;
+    else if (picked) { me().avatar = picked; me().avatarPic = null; }
+    if (pendingCoverPic) me().coverPic = pendingCoverPic;
+    saveState(); m.remove(); render();
+    toast('Profil diperbarui ✅');
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+function showUserList(userId, type){
+  const u = user(userId); if (!u) return;
+  const ids = u[type] || [];
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  let html = '<div class="modal" style="max-height:80vh;overflow-y:auto"><h3>' + (type === 'followers' ? '👥 Pengikut' : '➡️ Mengikuti') + '</h3>';
+  if (!ids.length) {
+    html += '<div class="empty" style="padding:20px"><p>Belum ada</p></div>';
+  } else {
+    ids.forEach(function(id){
+      const t = user(id); if (!t) return;
+      const f = me().following.indexOf(id) >= 0;
+      html += '<div class="user-row" data-uid="' + id + '">' + avatarHtml(t,'sm') +
+        '<div class="info"><div class="name">' + nameWithBadge(t) + '</div><div class="bio">' + esc(t.bio||'') + '</div></div>' +
+        (id !== getMeId() ? '<button class="mini-btn ' + (f?'following':'') + '" data-follow="' + id + '">' + (f?'✓':'+') + '</button>' : '') +
+        '</div>';
+    });
+  }
+  html += '<button class="btn sec" id="closeUserList" style="margin-top:10px">Tutup</button></div>';
+  m.innerHTML = html;
+  document.body.appendChild(m);
+  $('closeUserList').onclick = function(){ m.remove(); };
+  m.querySelectorAll('[data-uid]').forEach(function(row){
+    row.querySelector('.info').onclick = function(){ m.remove(); go('userprofile', { profileId: row.dataset.uid }); };
+  });
+  m.querySelectorAll('[data-follow]').forEach(function(btn){
+    btn.onclick = function(e){ e.stopPropagation(); toggleFollow(btn.dataset.follow); m.remove(); };
+  });
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+/* ============ PENGATURAN ============ */
+function renderPengaturan(root){
+  const u = me();
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '⚙️ Pengaturan';
+  root.appendChild(h);
+
+  const sec1 = document.createElement('div');
+  sec1.innerHTML = '<div class="setting-section-title">🔐 Akun</div>';
+  const list1 = document.createElement('div');
+  list1.className = 'setting-list';
+  list1.innerHTML =
+    '<div class="setting-item" id="setEdit"><div class="sic">👤</div><div class="stxt"><div class="sttl">Edit Profil</div><div class="ssub">Nama, bio, foto, cover</div></div><div class="sarr">›</div></div>' +
+    '<div class="setting-item" id="setPusat"><div class="sic">🔐</div><div class="stxt"><div class="sttl">Pusat Akun</div><div class="ssub">Info akun & sandi</div></div><div class="sarr">›</div></div>' +
+    '<div class="setting-item" id="setKeamanan"><div class="sic">🛡️</div><div class="stxt"><div class="sttl">Keamanan</div><div class="ssub">PIN & login</div></div><div class="sarr">›</div></div>' +
+    (!u.verified && !u.isFounder && !u.isBot ? '<div class="setting-item" id="setVerifAjukan"><div class="sic">✓</div><div class="stxt"><div class="sttl">Ajukan Verifikasi</div><div class="ssub">Dapatkan centang orange</div></div><div class="sarr">›</div></div>' : '');
+  sec1.appendChild(list1);
+  root.appendChild(sec1);
+  setTimeout(function(){
+    const e1 = $('setEdit'); if (e1) e1.onclick = openEditProfile;
+    const e2 = $('setPusat'); if (e2) e2.onclick = function(){ go('pusatakun'); };
+    const e3 = $('setKeamanan'); if (e3) e3.onclick = function(){ go('keamanan'); };
+    const e4 = $('setVerifAjukan'); if (e4) e4.onclick = openAjukanVerifikasi;
+  }, 10);
+
+  const sec2 = document.createElement('div');
+  sec2.innerHTML = '<div class="setting-section-title">🎨 Tampilan & Hiburan</div>';
+  const list2 = document.createElement('div');
+  list2.className = 'setting-list';
+  list2.innerHTML =
+    '<div class="setting-item" id="setTheme"><div class="sic">' + (getTheme()==='dark'?'☀️':'🌙') + '</div><div class="stxt"><div class="sttl">Mode ' + (getTheme()==='dark'?'Terang':'Gelap') + '</div><div class="ssub">Ganti tema</div></div><div class="sarr">›</div></div>' +
+    '<div class="setting-item" id="setSounds"><div class="sic">🎵</div><div class="stxt"><div class="sttl">Sound Community</div><div class="ssub">Sound untuk Reels & chat</div></div><div class="sarr">›</div></div>';
+  sec2.appendChild(list2);
+  root.appendChild(sec2);
+  setTimeout(function(){
+    const t = $('setTheme'); if (t) t.onclick = function(){ toggleTheme(); render(); };
+    const s = $('setSounds'); if (s) s.onclick = function(){ go('sounds'); };
+  }, 10);
+
+  if (u.isFounder || u.isAdmin) {
+    const pendingVerif = state.verifikasi.filter(function(v){return v.status === 'pending' || v.status === 'menunggu_balasan';}).length;
+    const secF = document.createElement('div');
+    secF.innerHTML = '<div class="setting-section-title founder">👑 Khusus Founder</div>';
+    const listF = document.createElement('div');
+    listF.className = 'founder-box';
+    listF.innerHTML = '<div class="founder-head"><div class="fic">👑</div><div><div class="fttl">Panel Founder</div><div class="fsub">Hanya Anda yang bisa akses</div></div></div>' +
+      '<div class="setting-item" id="setVerif"><div class="sic">📥</div><div class="stxt"><div class="sttl">Verifikasi User' + (pendingVerif ? '<span style="background:#ef4444;color:#fff;font-size:10px;padding:2px 7px;border-radius:8px;margin-left:6px">' + pendingVerif + ' baru</span>' : '') + '</div><div class="ssub">Chat & approve centang</div></div><div class="sarr">›</div></div>' +
+      '<div class="setting-item" id="setUsers"><div class="sic">👥</div><div class="stxt"><div class="sttl">Kelola Pengguna</div><div class="ssub">Lihat & hapus user</div></div><div class="sarr">›</div></div>' +
+      '<div class="setting-item" id="setStats"><div class="sic">📊</div><div class="stxt"><div class="sttl">Statistik Aplikasi</div><div class="ssub">Dashboard interaktif</div></div><div class="sarr">›</div></div>';
+    secF.appendChild(listF);
+    root.appendChild(secF);
+    setTimeout(function(){
+      const e1 = $('setVerif'); if (e1) e1.onclick = function(){ go('verifikasi'); };
+      const e2 = $('setUsers'); if (e2) e2.onclick = function(){ go('kelolauser'); };
+      const e3 = $('setStats'); if (e3) e3.onclick = function(){ go('statistik'); };
+    }, 10);
+  }
+
+  const sec3 = document.createElement('div');
+  sec3.innerHTML = '<div class="setting-section-title">📜 Lainnya</div>';
+  const list3 = document.createElement('div');
+  list3.className = 'setting-list';
+  list3.innerHTML = '<div class="setting-item" id="setTentang"><div class="sic">ℹ️</div><div class="stxt"><div class="sttl">Tentang Aplikasi</div><div class="ssub">Info & versi</div></div><div class="sarr">›</div></div>';
+  sec3.appendChild(list3);
+  root.appendChild(sec3);
+  setTimeout(function(){
+    const t = $('setTentang'); if (t) t.onclick = function(){ go('tentang'); };
+  }, 10);
+
+  const sec4 = document.createElement('div');
+  sec4.innerHTML = '<div class="setting-section-title">Keluar</div>';
+  const list4 = document.createElement('div');
+  list4.className = 'setting-list';
+  list4.innerHTML = '<div class="setting-item danger" id="setLogout"><div class="sic">🚪</div><div class="stxt"><div class="sttl">Keluar Akun</div><div class="ssub">Logout dari perangkat ini</div></div><div class="sarr">›</div></div>';
+  sec4.appendChild(list4);
+  root.appendChild(sec4);
+  setTimeout(function(){
+    const l = $('setLogout'); if (l) l.onclick = logout;
+  }, 10);
+}
+
+/* ============ STATISTIK DASHBOARD INTERAKTIF ============ */
+function renderStatistik(root){
+  if (!me().isFounder && !me().isAdmin) {
+    root.innerHTML = '<div class="empty"><div class="big">⛔</div><p>Akses khusus Founder</p></div>';
+    return;
+  }
+  const users = Object.values(state.users);
+  const realUsers = users.filter(function(u){return !u.isBot;});
+  const bots = users.filter(function(u){return u.isBot;});
+  const verifiedUsers = users.filter(function(u){return u.verified;});
+  const totalMsgs = Object.values(state.chats).reduce(function(a,c){return a+c.length;},0) + Object.values(state.groups).reduce(function(a,g){return a+g.messages.length;},0);
+  const online = realUsers.filter(function(u){return isOnline(u.id);}).length;
+
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '📊 Statistik (Klik untuk detail)';
+  root.appendChild(h);
+
+  const grid = document.createElement('div');
+  grid.className = 'admin-grid';
+  grid.innerHTML =
+    '<div class="admin-stat" data-stat="users"><div class="arrow">›</div><div class="n">' + realUsers.length + '</div><div class="l">User Asli</div></div>' +
+    '<div class="admin-stat" data-stat="online"><div class="arrow">›</div><div class="n">' + online + '</div><div class="l">Online</div></div>' +
+    '<div class="admin-stat" data-stat="bots"><div class="arrow">›</div><div class="n">' + bots.length + '</div><div class="l">Bot</div></div>' +
+    '<div class="admin-stat" data-stat="posts"><div class="arrow">›</div><div class="n">' + state.posts.length + '</div><div class="l">Postingan</div></div>' +
+    '<div class="admin-stat" data-stat="reels"><div class="arrow">›</div><div class="n">' + (state.reels||[]).length + '</div><div class="l">Reels</div></div>' +
+    '<div class="admin-stat" data-stat="msgs"><div class="arrow">›</div><div class="n">' + totalMsgs + '</div><div class="l">Pesan</div></div>' +
+    '<div class="admin-stat" data-stat="groups"><div class="arrow">›</div><div class="n">' + Object.keys(state.groups).length + '</div><div class="l">Grup</div></div>' +
+    '<div class="admin-stat" data-stat="verified"><div class="arrow">›</div><div class="n">' + verifiedUsers.length + '</div><div class="l">Verified</div></div>';
+  root.appendChild(grid);
+
+  // Event delegation untuk klik kartu
+  setTimeout(function(){
+    grid.querySelectorAll('[data-stat]').forEach(function(card){
+      card.onclick = function(){ openStatDetail(card.dataset.stat); };
+    });
+  }, 10);
+
+  // GRAFIK AKTIVITAS 7 HARI
+  const chartH = document.createElement('div');
+  chartH.className = 'section-title';
+  chartH.style.marginTop = '20px';
+  chartH.innerHTML = '📈 Aktivitas Postingan 7 Hari';
+  root.appendChild(chartH);
+
+  const chartData = getActivityChart();
+  const maxCount = Math.max.apply(null, chartData.map(function(d){return d.count;}).concat([1]));
+  const chartWrap = document.createElement('div');
+  chartWrap.className = 'chart-wrap';
+  let barsHtml = '';
+  chartData.forEach(function(d){
+    const heightPct = (d.count / maxCount) * 100;
+    barsHtml += '<div class="chart-bar" style="height:' + Math.max(heightPct, 4) + '%">' +
+      (d.count > 0 ? '<span class="val">' + d.count + '</span>' : '') + '</div>';
+  });
+  let labelsHtml = '';
+  chartData.forEach(function(d){ labelsHtml += '<span>' + d.label + '</span>'; });
+  chartWrap.innerHTML = '<div class="chart-bars">' + barsHtml + '</div><div class="chart-labels">' + labelsHtml + '</div>';
+  root.appendChild(chartWrap);
+
+  // TOP USER
+  const topH = document.createElement('div');
+  topH.className = 'section-title';
+  topH.style.marginTop = '20px';
+  topH.innerHTML = '🏆 Top User (Paling Aktif)';
+  root.appendChild(topH);
+  const topUsers = getTopUsers(5, 'post');
+  if (!topUsers.length || topUsers[0].score === 0) {
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.style.padding = '20px';
+    e.innerHTML = '<p style="font-size:12px">Belum ada aktivitas</p>';
+    root.appendChild(e);
+  } else {
+    topUsers.forEach(function(t, i){
+      if (t.score === 0) return;
+      const rankCls = i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : 'rN';
+      const el = document.createElement('div');
+      el.className = 'top-item';
+      el.innerHTML = '<div class="rank ' + rankCls + '">' + (i+1) + '</div>' +
+        avatarHtml(t.user, 'sm') +
+        '<div class="info"><div class="name">' + nameWithBadge(t.user) + '</div>' +
+        '<div class="score">' + t.score + ' postingan</div></div>' +
+        '<div class="val">' + t.score + '</div>';
+      el.onclick = function(){ go('userprofile', { profileId: t.user.id }); };
+      root.appendChild(el);
+    });
+  }
+
+  // USER BARU MINGGU INI
+  const newH = document.createElement('div');
+  newH.className = 'section-title';
+  newH.style.marginTop = '20px';
+  newH.innerHTML = '🆕 User Baru (7 Hari Terakhir)';
+  root.appendChild(newH);
+  const newUsers = getNewUsers(10);
+  if (!newUsers.length) {
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.style.padding = '20px';
+    e.innerHTML = '<p style="font-size:12px">Belum ada user baru minggu ini</p>';
+    root.appendChild(e);
+  } else {
+    newUsers.forEach(function(u){
+      const row = document.createElement('div');
+      row.className = 'user-row';
+      row.innerHTML = avatarHtml(u, isOnline(u.id)?'online':'') +
+        '<div class="info"><div class="name">' + nameWithBadge(u) + '</div>' +
+        '<div class="bio">Bergabung ' + timeAgo(u.joinedAt) + '</div></div>' +
+        '<button class="mini-btn" style="padding:6px 10px">Lihat</button>';
+      row.onclick = function(){ go('userprofile', { profileId: u.id }); };
+      root.appendChild(row);
+    });
+  }
+
+  // TRENDING HASHTAG
+  const tagH = document.createElement('div');
+  tagH.className = 'section-title';
+  tagH.style.marginTop = '20px';
+  tagH.innerHTML = '#️⃣ Hashtag Trending';
+  root.appendChild(tagH);
+  const tags = getTrendingHashtags(8);
+  if (!tags.length) {
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.style.padding = '20px';
+    e.innerHTML = '<p style="font-size:12px">Belum ada hashtag</p>';
+    root.appendChild(e);
+  } else {
+    tags.forEach(function(t){
+      const el = document.createElement('div');
+      el.className = 'hashtag-item';
+      el.innerHTML = '<div class="ht-icon">#</div>' +
+        '<div class="ht-info"><div class="ht-name">#' + esc(t.tag) + '</div>' +
+        '<div class="ht-count">' + t.count + ' postingan • ' + t.likes + ' like</div></div>' +
+        '<div class="ht-arrow">›</div>';
+      el.onclick = function(){ go('hashtag', { trendingHashtag: t.tag }); };
+      root.appendChild(el);
+    });
+  }
+
+  const dz = document.createElement('div');
+  dz.style.marginTop = '20px';
+  dz.innerHTML = '<button class="btn" style="background:#ef4444;box-shadow:none" id="clearPosts">🗑️ Hapus Postingan</button>' +
+    '<button class="btn sec" style="margin-top:8px" id="exportData">📥 Export Data</button>';
+  root.appendChild(dz);
+  setTimeout(function(){
+    const c = $('clearPosts'); if (c) c.onclick = adminClearAll;
+    const e = $('exportData'); if (e) e.onclick = adminExport;
+  }, 10);
+}
+
+function openStatDetail(type){
+  const users = Object.values(state.users);
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  let title = '';
+  let list = [];
+
+  if (type === 'users') { title = '👥 User Asli'; list = users.filter(function(u){return !u.isBot;}); }
+  else if (type === 'online') { title = '🟢 Sedang Online'; list = users.filter(function(u){return isOnline(u.id);}); }
+  else if (type === 'bots') { title = '🤖 Bot'; list = users.filter(function(u){return u.isBot;}); }
+  else if (type === 'verified') { title = '✓ Terverifikasi'; list = users.filter(function(u){return u.verified;}); }
+  else if (type === 'posts') {
+    m.remove();
+    go('feed');
+    toast('📝 ' + state.posts.length + ' postingan');
+    return;
+  }
+  else if (type === 'reels') {
+    m.remove();
+    go('reels');
+    return;
+  }
+  else if (type === 'msgs') {
+    m.remove();
+    go('chat');
+    return;
+  }
+  else if (type === 'groups') {
+    m.remove();
+    go('groups');
+    return;
+  }
+
+  let html = '<div class="modal" style="max-height:80vh;overflow-y:auto"><h3>' + title + ' (' + list.length + ')</h3>';
+  if (!list.length) {
+    html += '<div class="empty" style="padding:20px"><p>Belum ada</p></div>';
+  } else {
+    list.sort(function(a,b){ return (b.lastSeen||0) - (a.lastSeen||0); });
+    list.forEach(function(u){
+      const online = isOnline(u.id);
+      html += '<div class="user-row" data-uid="' + u.id + '">' +
+        avatarHtml(u, online?'online':'') +
+        '<div class="info"><div class="name">' + nameWithBadge(u) + (u.isBot?'<span style="background:rgba(16,185,129,.15);color:var(--ok);font-size:9px;padding:1px 6px;border-radius:6px;font-weight:800">BOT</span>':'') + '</div>' +
+        '<div class="bio">' + (online ? '🟢 Online' : 'Terakhir ' + timeAgo(u.lastSeen||u.joinedAt)) + '</div></div>' +
+        '<span style="font-size:18px;color:var(--muted)">›</span></div>';
+    });
+  }
+  html += '<button class="btn sec" id="closeStat" style="margin-top:10px">Tutup</button></div>';
+  m.innerHTML = html;
+  document.body.appendChild(m);
+  setTimeout(function(){
+    $('closeStat').onclick = function(){ m.remove(); };
+    m.querySelectorAll('[data-uid]').forEach(function(row){
+      row.onclick = function(){ m.remove(); go('userprofile', { profileId: row.dataset.uid }); };
+    });
+  }, 10);
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+function adminClearAll(){
+  if (!confirm('Hapus SEMUA postingan?')) return;
+  state.posts = [];
+  saveState(); toast('Postingan dihapus'); render();
+}
+function adminExport(){
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'temu-kawan-' + Date.now() + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  toast('Diexport 📥');
+}
+
+/* ============ PUSAT AKUN ============ */
+function renderPusatAkun(root){
+  const u = me();
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '🔐 Pusat Akun';
+  root.appendChild(h);
+  const info = document.createElement('div');
+  info.className = 'card';
+  info.innerHTML = '<div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">' + avatarHtml(u,'lg') +
+    '<div style="flex:1"><div style="font-weight:900;font-size:18px;display:flex;align-items:center;gap:6px">' + nameWithBadge(u) + '</div>' +
+    (u.isFounder ? '<div style="color:var(--verify);font-weight:800;font-size:11px;margin-top:4px">👑 FOUNDER</div>' : '') + '</div></div>' +
+    '<div class="stat-row"><div class="sic">👤</div><div class="stxt">Username</div><div class="sval">@' + esc(u.username||u.id) + '</div></div>' +
+    '<div class="stat-row"><div class="sic">📧</div><div class="stxt">Email</div><div class="sval" style="font-size:12px">' + esc(u.email||'—') + '</div></div>' +
+    '<div class="stat-row"><div class="sic">📱</div><div class="stxt">WA</div><div class="sval" style="font-size:12px">' + esc(u.wa||'—') + '</div></div>' +
+    '<div class="stat-row"><div class="sic">📍</div><div class="stxt">Kota</div><div class="sval" style="font-size:12px">' + esc(u.kota||'—') + '</div></div>' +
+    '<div class="stat-row"><div class="sic">📅</div><div class="stxt">Bergabung</div><div class="sval" style="font-size:12px">' + new Date(u.joinedAt).toLocaleDateString('id-ID') + '</div></div>';
+  root.appendChild(info);
+  const btnWrap = document.createElement('div');
+  btnWrap.innerHTML = '<button class="btn" id="gantiSandiBtn">🔑 Ganti Kata Sandi</button>';
+  root.appendChild(btnWrap);
+  setTimeout(function(){ const b = $('gantiSandiBtn'); if (b) b.onclick = openGantiSandi; }, 10);
+}
+
+function openGantiSandi(){
+  if (me().isFounder) return toast('Sandi Founder tidak bisa diganti dari sini');
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = '<div class="modal"><h3>🔑 Ganti Sandi</h3>' +
+    '<label>Sandi Lama</label><div class="field-wrap"><input class="field" id="oldPass" type="password"><button class="field-eye" onclick="toggleEye(\'oldPass\',this)" type="button">👁️</button></div>' +
+    '<label>Sandi Baru</label><div class="field-wrap"><input class="field" id="newPass1" type="password"><button class="field-eye" onclick="toggleEye(\'newPass1\',this)" type="button">👁️</button></div>' +
+    '<label>Ulangi</label><div class="field-wrap"><input class="field" id="newPass2" type="password"><button class="field-eye" onclick="toggleEye(\'newPass2\',this)" type="button">👁️</button></div>' +
+    '<button class="btn" id="savePass">💾 Simpan</button>' +
+    '<button class="btn sec" id="passCancel" style="margin-top:8px">Batal</button></div>';
+  document.body.appendChild(m);
+  $('passCancel').onclick = function(){ m.remove(); };
+  $('savePass').onclick = function(){
+    const o = $('oldPass').value, n1 = $('newPass1').value, n2 = $('newPass2').value;
+    if (me().password !== o) return toast('❌ Sandi lama salah');
+    if (!n1 || n1.length < 4) return toast('⚠️ Min 4 karakter');
+    if (n1 !== n2) return toast('⚠️ Tidak sama!');
+    me().password = n1;
+    saveState(); m.remove();
+    toast('✅ Sandi diganti!');
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+function renderKeamanan(root){
+  const u = me();
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '🛡️ Keamanan';
+  root.appendChild(h);
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = '<div class="stat-row"><div class="sic">🔒</div><div class="stxt">PIN Akun</div><div class="sval">' + (u.pin?'Aktif ✓':'Belum') + '</div></div>' +
+    '<div class="stat-row"><div class="sic">🕐</div><div class="stxt">Login terakhir</div><div class="sval" style="font-size:12px">' + timeAgo(u.lastSeen||Date.now()) + '</div></div>';
+  root.appendChild(card);
+  const btns = document.createElement('div');
+  btns.innerHTML = '<button class="btn" id="pinBtn">' + (u.pin?'🗑️ Hapus PIN':'🔒 Set PIN') + '</button>';
+  root.appendChild(btns);
+  setTimeout(function(){
+    const b = $('pinBtn');
+    if (b) b.onclick = function(){
+      if (u.pin) {
+        if (confirm('Hapus PIN?')) { u.pin = null; saveState(); toast('PIN dihapus'); render(); }
+      } else setPin();
+    };
+  }, 10);
+}
+
+function setPin(){
+  pinInput = '';
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = '<div class="modal" style="text-align:center"><h3>🔒 Set PIN</h3>' +
+    '<p style="font-size:12px;color:var(--muted);margin-bottom:14px">PIN 4 digit</p>' +
+    '<div class="pin-dots" id="pinDots">○○○○</div>' +
+    '<div class="pin-pad" id="pinPad">' + [1,2,3,4,5,6,7,8,9,'C',0,'✓'].map(function(v){return '<button data-v="'+v+'">'+v+'</button>';}).join('') + '</div>' +
+    '<button class="btn sec" id="pinCancel">Batal</button></div>';
+  document.body.appendChild(m);
+  $('pinCancel').onclick = function(){ m.remove(); };
+  $('pinPad').onclick = function(e){
+    const b = e.target.closest('button'); if (!b) return;
+    const v = b.dataset.v;
+    if (v === 'C') pinInput = '';
+    else if (v === '✓') {
+      if (pinInput.length !== 4) return toast('PIN harus 4 digit');
+      me().pin = pinInput;
+      saveState(); m.remove(); toast('✅ PIN aktif!'); render();
+      return;
+    } else {
+      if (pinInput.length < 4) pinInput += v;
+    }
+    $('pinDots').textContent = pinInput.padEnd(4,'○').replace(/\d/g,'●').slice(0,4);
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+function renderTentang(root){
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = 'ℹ️ Tentang';
+  root.appendChild(h);
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = '<div style="text-align:center;margin-bottom:16px">' +
+    '<div style="font-size:48px;margin-bottom:8px">👥</div>' +
+    '<div style="font-size:22px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Temu Kawan Pro</div>' +
+    '<div style="font-size:12px;color:var(--muted);margin-top:4px">Versi 8.0 • 2025</div></div>' +
+    '<div class="sk-box" style="max-height:none;text-align:center"><b>Menyapa Bebual Bersama</b>Aplikasi sosial untuk kumpul, ngobrol, dan berbagi bareng teman-teman.</div>' +
+    '<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);text-align:center;font-size:12px;line-height:1.8;color:var(--muted)">' +
+    '<div style="font-weight:800;color:var(--p1);margin-bottom:6px">👑 Founder</div>' +
+    '<div style="font-weight:900;color:var(--txt);font-size:14px">Shank Anggara From Ulumonggo</div>' +
+    '<div style="margin-top:8px">📧 Anggishankjebone@gmail.com</div>' +
+    '<div>💬 WhatsApp: 0822-6894-2325</div>' +
+    '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11px">© 2025 Shank Anggara From Ulumonggo<br>All Rights Reserved</div></div>';
+  root.appendChild(card);
+}
+
+function logout(){
+  if (!confirm('Yakin ingin keluar dari akun?')) return;
+  setMeId(null);
+  view = { screen:'feed', profileId:null, chatWith:null, groupId:null, feedTab:'all', profileTab:'status', verificationId:null, reelIndex:0, trendingHashtag:null };
+  toast('👋 Berhasil keluar');
+  render();
+}
+
+/* ============ VERIFIKASI ============ */
+function openAjukanVerifikasi(){
+  if (me().verified) return toast('Anda sudah terverifikasi!');
+  if (me().isBot) return toast('Bot tidak perlu verifikasi');
+  if (me().isFounder) return toast('Founder sudah otomatis terverifikasi');
+  const sudah = state.verifikasi.find(function(v){return v.userId === getMeId() && (v.status === 'pending' || v.status === 'menunggu_balasan');});
+  if (sudah) { go('verifdetail', { verificationId: sudah.id }); return; }
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = '<div class="modal"><h3>✓ Ajukan Verifikasi</h3>' +
+    '<div class="sk-box"><b>📜 Syarat & Ketentuan:</b>' + SK_VERIFIKASI.map(function(s,i){return (i+1) + '. ' + s;}).join('<br>') + '</div>' +
+    '<label>Nama Lengkap</label><input class="field" id="vNama" placeholder="Nama lengkap" maxlength="60">' +
+    '<label>Kota/Kabupaten</label><input class="field" id="vKota" placeholder="Contoh: Jakarta" maxlength="40">' +
+    '<label>Nomor WhatsApp</label><input class="field" id="vWA" placeholder="08xxxxxxxxxx" maxlength="15">' +
+    '<label>Alasan</label><textarea class="field" id="vAlasan" placeholder="Alasan (min 20 karakter)..." maxlength="300" style="min-height:80px;resize:none;font-family:inherit"></textarea>' +
+    '<label style="display:flex;gap:8px;align-items:center;text-transform:none;font-size:13px;color:var(--txt);font-weight:600;margin-bottom:14px;cursor:pointer">' +
+    '<input type="checkbox" id="vSetuju" style="width:auto;margin:0"> Saya menyetujui S&K di atas</label>' +
+    '<button class="btn" id="vKirim">📤 Kirim Pengajuan</button>' +
+    '<button class="btn sec" id="vCancel" style="margin-top:8px">Batal</button></div>';
+  document.body.appendChild(m);
+  $('vCancel').onclick = function(){ m.remove(); };
+  $('vKirim').onclick = function(){
+    const nama = $('vNama').value.trim();
+    const kota = $('vKota').value.trim();
+    const wa = $('vWA').value.trim();
+    const alasan = $('vAlasan').value.trim();
+    const setuju = $('vSetuju').checked;
+    if (!nama) return toast('Isi nama lengkap');
+    if (!kota) return toast('Isi kota');
+    if (!wa || wa.length < 10) return toast('Isi WA yang valid');
+    if (!alasan || alasan.length < 20) return toast('Alasan min 20 karakter');
+    if (!setuju) return toast('Centang S&K dulu');
+    const vId = uid('v');
+    state.verifikasi.unshift({
+      id: vId, userId: getMeId(), nama: nama, kota: kota, wa: wa, alasan: alasan,
+      waktu: Date.now(), status: 'pending', chat: []
+    });
+    pushNotif(FOUNDER.id, 'verifikasi', { by: getMeId() });
+    saveState(); m.remove();
+    toast('📤 Pengajuan terkirim!');
+    render();
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+function renderVerifikasi(root){
+  if (!me().isFounder && !me().isAdmin) {
+    root.innerHTML = '<div class="empty"><div class="big">⛔</div><p>Akses khusus Founder</p></div>';
+    return;
+  }
+  const pending = state.verifikasi.filter(function(v){return v.status === 'pending';});
+  const menunggu = state.verifikasi.filter(function(v){return v.status === 'menunggu_balasan';});
+  const riwayat = state.verifikasi.filter(function(v){return v.status === 'approved' || v.status === 'rejected';}).slice(0, 10);
+
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '📥 Pengajuan Aktif <span class="num">' + (pending.length + menunggu.length) + '</span>';
+  root.appendChild(h);
+
+  const aktif = pending.concat(menunggu);
+  if (!aktif.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.style.padding = '30px';
+    empty.innerHTML = '<div class="big">📭</div><h4>Tidak ada pengajuan</h4>';
+    root.appendChild(empty);
+  } else {
+    aktif.forEach(function(v){
+      const u = user(v.userId); if (!u) return;
+      const div = document.createElement('div');
+      div.className = 'card';
+      const statusText = v.status === 'pending' ? '🟡 Baru' : '🟠 Menunggu';
+      const lastMsg = v.chat && v.chat.length ? v.chat[v.chat.length-1] : null;
+      div.innerHTML = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:10px">' + avatarHtml(u,'sm') +
+        '<div style="flex:1"><div style="font-weight:800;font-size:14px">' + esc(u.name) + '</div>' +
+        '<div style="font-size:11px;color:var(--muted)">' + statusText + ' • ' + timeAgo(v.waktu) + '</div></div></div>' +
+        '<div style="background:rgba(255,107,53,.06);border-radius:10px;padding:10px;font-size:12px;line-height:1.6;margin-bottom:10px">' +
+        '<b style="color:var(--p1)">📝 ' + esc(v.nama) + ' • 📍 ' + esc(v.kota) + ' • 📱 ' + esc(v.wa) + '</b><br>' +
+        '<b style="color:var(--p1)">💬 Alasan:</b> ' + esc(v.alasan) + '</div>' +
+        (lastMsg ? '<div style="background:rgba(16,185,129,.08);border-radius:10px;padding:8px 12px;font-size:11px;margin-bottom:10px">💬 Terakhir: "' + esc(lastMsg.text.slice(0,60)) + '"</div>' : '') +
+        '<button class="btn" style="padding:10px" id="openChat_' + v.id + '">💬 Chat & Review</button>';
+      root.appendChild(div);
+      setTimeout(function(){
+        const cb = $('openChat_' + v.id);
+        if (cb) cb.onclick = function(){ go('verifdetail', { verificationId: v.id }); };
+      }, 10);
+    });
+  }
+
+  if (riwayat.length) {
+    const rh = document.createElement('div');
+    rh.className = 'section-title';
+    rh.style.marginTop = '20px';
+    rh.innerHTML = '📜 Riwayat';
+    root.appendChild(rh);
+    riwayat.forEach(function(v){
+      const u = user(v.userId); if (!u) return;
+      const div = document.createElement('div');
+      div.className = 'user-row';
+      div.innerHTML = avatarHtml(u,'xs') + '<div class="info"><div class="name">' + esc(u.name) + '</div>' +
+        '<div class="bio" style="color:' + (v.status==='approved'?'var(--ok)':'var(--err)') + '">' +
+        (v.status==='approved'?'✅ Disetujui':'❌ Ditolak') + ' • ' + timeAgo(v.waktu) + '</div></div>';
+      root.appendChild(div);
+    });
+  }
+}
+
+function renderVerifDetail(root){
+  const v = state.verifikasi.find(function(x){return x.id === view.verificationId;});
+  if (!v) { root.innerHTML = '<div class="empty"><p>Pengajuan tidak ditemukan</p></div>'; return; }
+  const pengaju = user(v.userId); if (!pengaju) return;
+  const isFounder = me().isFounder || me().isAdmin;
+  const isPengaju = v.userId === getMeId();
+
+  const info = document.createElement('div');
+  info.className = 'card';
+  info.innerHTML = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">' + avatarHtml(pengaju,'sm') +
+    '<div style="flex:1"><div style="font-weight:800;font-size:15px">' + esc(pengaju.name) + '</div>' +
+    '<div style="font-size:11px;color:var(--muted)">' + esc(pengaju.email||'') + '</div></div>' +
+    '<span style="font-size:10px;padding:3px 8px;border-radius:8px;font-weight:800;' +
+    (v.status === 'approved' ? 'background:rgba(16,185,129,.15);color:var(--ok)' :
+     v.status === 'rejected' ? 'background:rgba(239,68,68,.15);color:var(--err)' :
+     v.status === 'menunggu_balasan' ? 'background:rgba(255,140,0,.15);color:var(--verify)' :
+     'background:rgba(255,107,53,.15);color:var(--p1)') + '">' +
+    (v.status === 'approved' ? '✅ DISETUJUI' : v.status === 'rejected' ? '❌ DITOLAK' : v.status === 'menunggu_balasan' ? '🟠 PERLU DATA' : '🟡 PENDING') + '</span></div>' +
+    '<div style="font-size:12px;line-height:1.7;color:var(--txt)">' +
+    '<b style="color:var(--p1)">📝 Nama:</b> ' + esc(v.nama) + '<br>' +
+    '<b style="color:var(--p1)">📍 Kota:</b> ' + esc(v.kota) + '<br>' +
+    '<b style="color:var(--p1)">📱 WA:</b> ' + esc(v.wa) + '<br>' +
+    '<b style="color:var(--p1)">💬 Alasan:</b> ' + esc(v.alasan) + '</div>';
+  root.appendChild(info);
+
+  const chatWrap = document.createElement('div');
+  chatWrap.className = 'vchat-wrap';
+  chatWrap.innerHTML = '<div class="vchat-title">💬 Chat Verifikasi</div>' +
+    '<div id="vChatList"></div>' +
+    (isFounder || isPengaju ? '<div class="vchat-input"><input id="vChatInput" placeholder="Tulis pesan..." maxlength="300"><button id="vChatSend">➤</button></div>' : '') +
+    (isFounder ? '<div class="vtemplate-row" id="vTemplates">' +
+      '<div class="vtemplate" data-t="Mohon lengkapi data: ">✏️ Minta lengkapi</div>' +
+      '<div class="vtemplate" data-t="Tunggu 7 hari lagi ya">⏳ Tunggu 7 hari</div>' +
+      '<div class="vtemplate" data-t="Foto profil harus asli">📸 Foto asli</div>' +
+      '<div class="vtemplate" data-t="Terima kasih, sedang ditinjau">👀 Ditinjau</div>' +
+      '<div class="vtemplate" data-t="Maaf, pengajuan belum bisa disetujui">❌ Belum bisa</div>' +
+      '</div>' : '') +
+    (isFounder && v.status !== 'approved' && v.status !== 'rejected' ?
+      '<div style="display:flex;gap:8px;margin-top:12px">' +
+      '<button class="btn" style="flex:1;background:linear-gradient(135deg,#10b981,#059669);padding:10px" id="vApprove">✓ Setujui</button>' +
+      '<button class="btn" style="flex:1;background:rgba(239,68,68,.15);color:var(--err);box-shadow:none;padding:10px" id="vReject">✕ Tolak</button>' +
+      '</div>' : '');
+  root.appendChild(chatWrap);
+
+  function renderChat(){
+    const list = $('vChatList');
+    if (!v.chat || !v.chat.length) {
+      list.innerHTML = '<div style="font-size:11px;color:var(--muted);text-align:center;padding:10px">Belum ada chat.</div>';
+      return;
+    }
+    list.innerHTML = v.chat.map(function(m){
+      const isMe = m.from === getMeId();
+      return '<div class="vchat-msg ' + (isMe ? 'me' : 'them') + '">' + esc(m.text) + '<span class="vt">' + timeFull(m.time) + '</span></div>';
+    }).join('');
+  }
+  renderChat();
+
+  setTimeout(function(){
+    const send = $('vChatSend');
+    const inp = $('vChatInput');
+    if (send && inp) {
+      send.onclick = function(){
+        const t = inp.value.trim(); if (!t) return;
+        v.chat.push({ from: getMeId(), text: t, time: Date.now() });
+        if (isFounder && v.status === 'pending') v.status = 'menunggu_balasan';
+        if (isPengaju) pushNotif(FOUNDER.id, 'vchat', { by: getMeId() });
+        else pushNotif(v.userId, 'vchat', { by: getMeId() });
+        saveState(); inp.value = ''; renderChat();
+      };
+      inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') send.click(); });
+    }
+    const temps = $('vTemplates');
+    if (temps) {
+      temps.onclick = function(e){
+        const t = e.target.closest('.vtemplate'); if (!t) return;
+        const inp2 = $('vChatInput'); if (!inp2) return;
+        inp2.value = t.dataset.t + ' ';
+        inp2.focus();
+      };
+    }
+    const ap = $('vApprove');
+    const rj = $('vReject');
+    if (ap) ap.onclick = function(){ approveVerifikasi(v.id); };
+    if (rj) rj.onclick = function(){ rejectVerifikasi(v.id); };
+  }, 10);
+}
+
+function approveVerifikasi(id){
+  const v = state.verifikasi.find(function(x){return x.id === id;}); if (!v) return;
+  v.status = 'approved'; v.diprosesAt = Date.now();
+  const u = state.users[v.userId];
+  if (u) { u.verified = true; pushNotif(u.id, 'verified', { by: FOUNDER.id }); }
+  saveState(); toast('✅ User diverifikasi!'); go('verifikasi');
+}
+function rejectVerifikasi(id){
+  if (!confirm('Tolak pengajuan ini?')) return;
+  const v = state.verifikasi.find(function(x){return x.id === id;}); if (!v) return;
+  v.status = 'rejected'; v.diprosesAt = Date.now();
+  const u = state.users[v.userId];
+  if (u) pushNotif(u.id, 'rejected', { by: FOUNDER.id });
+  saveState(); toast('Ditolak'); go('verifikasi');
+}
+
+/* ============ KELOLA USER ============ */
+function renderKelolaUser(root){
+  if (!me().isFounder && !me().isAdmin) {
+    root.innerHTML = '<div class="empty"><div class="big">⛔</div><p>Akses khusus Founder</p></div>';
+    return;
+  }
+  const users = Object.values(state.users).filter(function(u){return !u.isBot;});
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '👥 Kelola Pengguna (' + users.length + ')';
+  root.appendChild(h);
+  users.sort(function(a,b){return b.joinedAt - a.joinedAt;}).forEach(function(u){
+    const row = document.createElement('div');
+    row.className = 'user-row';
+    row.innerHTML = avatarHtml(u, isOnline(u.id)?'online':'') +
+      '<div class="info"><div class="name">' + nameWithBadge(u) + '</div>' +
+      '<div class="bio">📧 ' + esc(u.email||'—') + ' • ' + timeAgo(u.joinedAt) + '</div></div>' +
+      (u.isFounder ? '<span style="font-size:11px;color:var(--verify);font-weight:800">👑</span>' :
+        '<button class="mini-btn" style="background:rgba(239,68,68,.15);color:#ef4444;padding:8px 10px" id="del_' + u.id + '">🗑️</button>');
+    root.appendChild(row);
+    setTimeout(function(){
+      const av = row.querySelector('.avatar');
+      const inf = row.querySelector('.info');
+      if (av) av.onclick = function(){ go('userprofile', { profileId: u.id }); };
+      if (inf) inf.onclick = function(){ go('userprofile', { profileId: u.id }); };
+      const d = $('del_' + u.id);
+      if (d) d.onclick = function(e){ e.stopPropagation(); adminDeleteUser(u.id); };
+    }, 10);
+  });
+}
+
+function adminDeleteUser(id){
+  if (id === getMeId()) return toast('Tidak bisa hapus diri sendiri');
+  if (id === FOUNDER.id) return toast('Founder tidak bisa dihapus');
+  const u = state.users[id]; if (!u) return;
+  if (!confirm('Hapus user "' + u.name + '"?')) return;
+  delete state.users[id];
+  state.posts = state.posts.filter(function(p){return p.authorId !== id;});
+  Object.keys(state.chats).forEach(function(k){ if (k.indexOf(id) >= 0) delete state.chats[k]; });
+  Object.values(state.users).forEach(function(x){
+    x.following = x.following.filter(function(f){return f !== id;});
+    x.followers = x.followers.filter(function(f){return f !== id;});
+  });
+  saveState(); toast('User dihapus'); render();
+}
+
+/* ============ MODAL ONLINE ============ */
+function openOnlineModal(){
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.id = 'onlineModal';
+  m.innerHTML = '<div class="modal" style="max-height:85vh"><h3>🟢 User Online</h3>' +
+    '<input class="field" id="onlineSearch" placeholder="🔍 Cari nama..." style="margin-bottom:12px">' +
+    '<div class="tabs" id="onlineFilter" style="margin-bottom:12px;display:flex;gap:6px">' +
+      '<button class="tab active" data-filter="online" style="flex:1;padding:10px;border-radius:14px;font-weight:700;font-size:13px;background:var(--grad);color:#fff">🟢 Online</button>' +
+      '<button class="tab" data-filter="all" style="flex:1;padding:10px;border-radius:14px;font-weight:700;font-size:13px;background:rgba(255,107,53,.08);color:var(--muted)">👥 Semua</button>' +
+    '</div>' +
+    '<div id="onlineList" style="max-height:55vh;overflow-y:auto"></div>' +
+    '<button class="btn sec" id="closeOnline" style="margin-top:12px">Tutup</button></div>';
+  document.body.appendChild(m);
+
+  let filterMode = 'online';
+  let searchQuery = '';
+
+  function drawList(){
+    const list = $('onlineList'); if (!list) return;
+    const meId = getMeId();
+    let users = Object.values(state.users).filter(function(u){ return u.id !== meId; });
+
+    if (filterMode === 'online') users = users.filter(function(u){ return isOnline(u.id); });
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      users = users.filter(function(u){ return u.name.toLowerCase().indexOf(q) >= 0; });
+    }
+    users.sort(function(a,b){ return (b.lastSeen||0) - (a.lastSeen||0); });
+
+    if (!users.length) {
+      list.innerHTML = '<div class="empty" style="padding:30px"><div class="big">🌙</div><h4>' + (filterMode === 'online' ? 'Tidak ada yang online' : 'Belum ada user lain') + '</h4></div>';
+      return;
+    }
+
+    list.innerHTML = users.slice(0, 50).map(function(u){
+      const online = isOnline(u.id);
+      const hasWA = u.wa && u.wa.length >= 10;
+      return '<div class="online-item">' +
+        avatarHtml(u, online ? 'online' : '') +
+        '<div class="info"><div class="name">' + nameWithBadge(u) + (u.isBot?'<span style="background:rgba(16,185,129,.15);color:var(--ok);font-size:9px;padding:1px 6px;border-radius:6px;font-weight:800">BOT</span>':'') + '</div>' +
+        '<div class="bio' + (online?'':' off') + '">' + (online ? '🟢 Online • ' + timeAgo(u.lastSeen||Date.now()) : '⚫ Terakhir ' + timeAgo(u.lastSeen||u.joinedAt)) + '</div></div>' +
+        '<div class="online-actions">' +
+          '<button class="oa-chat" data-act="chat" data-uid="' + u.id + '" title="Chat">💬</button>' +
+          '<button class="oa-wa" data-act="wa" data-uid="' + u.id + '" title="WhatsApp"' + (hasWA?'':' disabled') + '>📞</button>' +
+          '<button class="oa-profile" data-act="profile" data-uid="' + u.id + '" title="Profil">👤</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    list.querySelectorAll('[data-act]').forEach(function(btn){
+      btn.onclick = function(){
+        const act = btn.dataset.act;
+        const uid2 = btn.dataset.uid;
+        const u2 = user(uid2);
+        if (!u2) return;
+        if (act === 'chat') { m.remove(); go('chatroom', { chatWith: uid2 }); }
+        else if (act === 'profile') { m.remove(); go('userprofile', { profileId: uid2 }); }
+        else if (act === 'wa') {
+          const wa = u2.wa ? u2.wa.replace(/[^0-9]/g, '').replace(/^0/, '62') : '';
+          if (!wa) return toast('User belum isi nomor WA');
+          const url = 'https://wa.me/' + wa + '?text=' + encodeURIComponent('Halo ' + u2.name + ', saya dari Temu Kawan 👋');
+          window.open(url, '_blank');
+        }
+      };
+    });
+  }
+
+  setTimeout(function(){
+    drawList();
+    $('closeOnline').onclick = function(){ m.remove(); if (onlineModalTimer) clearInterval(onlineModalTimer); };
+    $('onlineSearch').addEventListener('input', function(e){ searchQuery = e.target.value.trim(); drawList(); });
+    $('onlineFilter').onclick = function(e){
+      const b = e.target.closest('.tab'); if (!b) return;
+      $('onlineFilter').querySelectorAll('.tab').forEach(function(x){x.classList.remove('active'); x.style.background = 'rgba(255,107,53,.08)'; x.style.color = 'var(--muted)';});
+      b.classList.add('active'); b.style.background = 'var(--grad)'; b.style.color = '#fff';
+      filterMode = b.dataset.filter; drawList();
+    };
+    if (onlineModalTimer) clearInterval(onlineModalTimer);
+    onlineModalTimer = setInterval(function(){
+      if (!document.getElementById('onlineModal')) { clearInterval(onlineModalTimer); onlineModalTimer = null; return; }
+      state = loadState();
+      drawList();
+    }, 5000);
+  }, 10);
+
+  m.onclick = function(e){ if (e.target === m) { m.remove(); if (onlineModalTimer) clearInterval(onlineModalTimer); } };
+}
+
+function openUploadChoice(){
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = '<div class="modal"><h3>📤 Upload</h3>' +
+    '<button class="btn" id="upPost" style="margin-bottom:10px">📷 Buat Postingan</button>' +
+    '<button class="btn" id="upReel" style="background:linear-gradient(135deg,#a855f7,#ec4899);margin-bottom:10px">🎬 Upload Reel</button>' +
+    '<button class="btn sec" id="upCancel">Batal</button></div>';
+  document.body.appendChild(m);
+  $('upPost').onclick = function(){ m.remove(); openCompose(); };
+  $('upReel').onclick = function(){ m.remove(); openUploadReel(); };
+  $('upCancel').onclick = function(){ m.remove(); };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+/* ============ NOTIF ============ */
+function renderNotif(root){
+  const list = state.notifications[getMeId()] || [];
+  list.forEach(function(n){ n.read = true; });
+  saveState();
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '🔔 Notifikasi';
+  root.appendChild(h);
+  if (!list.length) {
+    root.innerHTML += '<div class="empty"><div class="big">🔕</div><h4>Belum ada notifikasi</h4></div>';
+    return;
+  }
+  list.forEach(function(n){
+    const d = n.data || {};
+    const actorId = n.by || d.by;
+    let u = actorId ? user(actorId) : null;
+    if (!u && d.name) {
+      u = { id: actorId, name: d.name, avatar: d.avatar || '👤', avatarPic: d.avatarPic };
+    }
+    if (!u) return;
+    const isFollowNotif = n.type === 'follow';
+    const alreadyFollow = isFollowNotif && me().following.indexOf(u.id) >= 0;
+    const isMe = u.id === getMeId();
+    const div = document.createElement('div');
+    div.className = 'notif';
+    let text = '';
+    if (n.type === 'like') text = '<b>' + esc(u.name) + '</b> menyukai postinganmu';
+    else if (n.type === 'comment') text = '<b>' + esc(u.name) + '</b> berkomentar: "' + esc((d.text||'').slice(0,40)) + '"';
+    else if (n.type === 'follow') text = '<b>' + esc(u.name) + '</b> mulai mengikuti kamu';
+    else if (n.type === 'message') text = '<b>' + esc(u.name) + '</b> mengirim pesan';
+    else if (n.type === 'verifikasi') text = '<b>' + esc(u.name) + '</b> mengajukan verifikasi';
+    else if (n.type === 'vchat') text = '<b>' + esc(u.name) + '</b> mengirim pesan verifikasi';
+    else if (n.type === 'verified') text = '✅ Akun Anda telah diverifikasi!';
+    else if (n.type === 'rejected') text = '❌ Pengajuan verifikasi ditolak';
+    else if (n.type === 'newuser') text = '🆕 <b>' + esc(u.name) + '</b> baru bergabung di Temu Kawan';
+
+    let followBtn = '';
+    if (isFollowNotif && !isMe && !alreadyFollow) {
+      followBtn = '<span class="follow-btn" data-follow-back="' + u.id + '">+ Ikuti balik</span>';
+    }
+
+    div.innerHTML = avatarHtml(u,'sm') + '<div class="body">' + text + '<div class="t">' + timeAgo(n.time) + '</div>' + followBtn + '</div>';
+    div.onclick = function(e){
+      if (e.target.classList.contains('follow-btn')) {
+        e.stopPropagation();
+        toggleFollow(u.id);
+        return;
+      }
+      if (n.type === 'verifikasi') go('verifikasi');
+      else if (n.type === 'vchat') {
+        const v = state.verifikasi.find(function(x){return x.userId === u.id;});
+        if (v) go('verifdetail', { verificationId: v.id });
+        else toast('Pengajuan tidak ditemukan');
+      }
+      else if (n.type === 'follow' || n.type === 'verified' || n.type === 'rejected' || n.type === 'newuser') {
+        if (u.id) go('userprofile', { profileId: u.id });
+      }
+      else if (n.type === 'message') go('chatroom', { chatWith: u.id });
+      else go('feed');
+    };
+    root.appendChild(div);
+  });
+}
+
+/* ============ CHAT ============ */
+function renderChatList(root){
+  const meId = getMeId();
+  const tabs = document.createElement('div');
+  tabs.className = 'tabs';
+  const t1 = document.createElement('button');
+  t1.className = 'tab active';
+  t1.textContent = '💬 Personal';
+  const t2 = document.createElement('button');
+  t2.className = 'tab';
+  t2.textContent = '👥 Grup';
+  t2.onclick = function(){ go('groups'); };
+  tabs.appendChild(t1); tabs.appendChild(t2);
+  root.appendChild(tabs);
+
+  const idsSet = {};
+  (me().following||[]).forEach(function(i){ idsSet[i] = true; });
+  (me().followers||[]).forEach(function(i){ idsSet[i] = true; });
+  const users = Object.keys(idsSet).map(function(id){ return user(id); }).filter(Boolean);
+  users.sort(function(a,b){
+    const ka = chatKey(meId, a.id), kb = chatKey(meId, b.id);
+    const ta = state.chats[kb] ? (state.chats[kb].slice(-1)[0]||{}).time || 0 : 0;
+    const tb = state.chats[ka] ? (state.chats[ka].slice(-1)[0]||{}).time || 0 : 0;
+    return ta - tb;
+  });
+  if (!users.length) {
+    root.innerHTML += '<div class="empty"><div class="big">💬</div><h4>Belum ada chat</h4><p>Ikuti seseorang di tab Cari</p></div>';
+    return;
+  }
+  users.forEach(function(u){
+    const key = chatKey(meId, u.id);
+    const msgs = state.chats[key] || [];
+    const last = msgs[msgs.length-1];
+    const unread = last && last.from !== meId && (!last.readBy || !last.readBy[meId]);
+    let preview = 'Mulai percakapan...';
+    if (last) {
+      if (last.type === 'image') preview = '📷 Foto';
+      else if (last.type === 'audio') preview = '🎤 Voice';
+      else preview = (last.from === meId ? 'Kamu: ' : '') + esc((last.text||'').slice(0,35));
+    }
+    const row = document.createElement('div');
+    row.className = 'user-row';
+    row.innerHTML = avatarHtml(u, isOnline(u.id)?'online':'') +
+      '<div class="info"><div class="name">' + nameWithBadge(u) + '</div><div class="bio">' + preview + '</div></div>' +
+      '<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">' + (last ? timeAgo(last.time) : '') + '</div>' +
+      (unread ? '<div style="display:inline-block;background:var(--err);color:#fff;font-size:10px;font-weight:800;padding:2px 6px;border-radius:8px;margin-top:3px">Baru</div>' : '') + '</div>';
+    row.onclick = function(){ go('chatroom', { chatWith: u.id }); };
+    root.appendChild(row);
+  });
+}
+
+function renderChatRoom(root){
+  const meId = getMeId();
+  const u = user(view.chatWith); if (!u) { go('chat'); return; }
+  const key = chatKey(meId, u.id);
+  const msgs = state.chats[key] || [];
+  msgs.forEach(function(m){ if (!m.readBy) m.readBy = {}; m.readBy[meId] = true; });
+  saveState();
+  const body = document.createElement('div');
+  body.className = 'chat-body'; body.id = 'chatBody';
+  if (!msgs.length) {
+    body.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:13px;padding:30px">👋 Mulai percakapan</div>';
+  } else {
+    msgs.forEach(function(m){
+      const div = document.createElement('div');
+      div.className = 'bubble ' + (m.from === meId ? 'me' : 'them');
+      let content = '';
+      if (m.type === 'image') content = '<img src="' + m.image + '">';
+      else if (m.type === 'audio') content = '<audio controls src="' + m.audio + '"></audio>';
+      content += esc(m.text || '');
+      const seen = m.from === meId && m.readBy && m.readBy[u.id];
+      div.innerHTML = content + '<span class="t">' + timeFull(m.time) + (m.from === meId ? '<span style="font-size:10px;opacity:.9;margin-left:4px">' + (seen?'✓✓':'✓') + '</span>' : '') + '</span>';
+      body.appendChild(div);
+    });
+  }
+  root.appendChild(body);
+
+  const row = document.createElement('div');
+  row.className = 'chat-input-row';
+  row.innerHTML = '<button class="sm-btn" id="chatImgBtn">📷</button>' +
+    '<input type="file" id="chatImg" accept="image/*" style="display:none">' +
+    '<input id="chatInput" placeholder="Ketik pesan..." maxlength="300">' +
+    '<button class="sm-btn" id="micBtn">🎤</button>' +
+    '<button class="send" id="sendBtn">➤</button>';
+  root.appendChild(row);
+  $('chatImgBtn').onclick = function(){ $('chatImg').click(); };
+  $('sendBtn').onclick = sendMessage;
+  $('chatInput').addEventListener('keydown', function(e){ if (e.key === 'Enter') sendMessage(); });
+  $('micBtn').onclick = toggleRecord;
+  $('chatImg').onchange = function(e){
+    const f = e.target.files[0]; if (!f) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const img = new Image();
+      img.onload = function(){
+        const sc = Math.min(1, 900 / img.width);
+        const c = document.createElement('canvas');
+        c.width = img.width * sc; c.height = img.height * sc;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        sendMsg({ type:'image', image: c.toDataURL('image/jpeg', 0.75), text:'' });
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(f);
+  };
+  setTimeout(function(){ body.scrollTop = body.scrollHeight; }, 40);
+}
+
+function sendMessage(){
+  const inp = $('chatInput'); if (!inp) return;
+  const text = inp.value.trim(); if (!text) return;
+  sendMsg({ text: text });
+  inp.value = '';
+}
+
+function sendMsg(msgObj){
+  const meId = getMeId();
+  const u = user(view.chatWith); if (!u) return;
+  const key = chatKey(meId, u.id);
+  if (!state.chats[key]) state.chats[key] = [];
+  const msg = { from: meId, time: Date.now(), readBy: {} };
+  msg.readBy[meId] = true;
+  for (const k in msgObj) msg[k] = msgObj[k];
+  state.chats[key].push(msg);
+  saveState();
+  renderChatRoom($('pageBody'));
+  pushNotif(u.id, 'message', { by: meId });
+  saveState();
+  if (u.isBot) {
+    setTimeout(function(){
+      const reply = BOT_REPLIES[Math.floor(Math.random()*BOT_REPLIES.length)];
+      const rmsg = { from: u.id, text: reply, time: Date.now(), readBy: {} };
+      rmsg.readBy[u.id] = true;
+      state.chats[key].push(rmsg);
+      u.lastSeen = Date.now();
+      saveState();
+      if (view.screen === 'chatroom' && view.chatWith === u.id) {
+        renderChatRoom($('pageBody'));
+        playSoundEffect(700, 0.2);
+      }
+    }, 1200 + Math.random()*1200);
+  }
+}
+
+async function toggleRecord(){
+  if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = function(e){ if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = function(){
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      clearInterval(recordingTimer);
+      const ov = $('recOverlay'); if (ov) ov.remove();
+      const blob = new Blob(audioChunks, { type: 'audio/webm' });
+      if (blob.size < 500) { toast('Rekaman pendek'); return; }
+      const reader = new FileReader();
+      reader.onload = function(){
+        const audio = reader.result;
+        if (audio.length > 900000) { toast('Terlalu panjang'); return; }
+        sendMsg({ type:'audio', audio: audio, text:'' });
+      };
+      reader.readAsDataURL(blob);
+    };
+    mediaRecorder.start();
+    recordingStart = Date.now();
+    const ov = document.createElement('div');
+    ov.id = 'recOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:20px';
+    ov.innerHTML = '<div style="font-size:80px">🎤</div><div id="recTimer" style="font-size:32px;font-weight:800">0:00</div><button id="stopRecBtn" style="background:#ef4444;color:#fff;padding:16px 40px;border-radius:40px;font-weight:800;border:none;cursor:pointer">⏹ Stop</button>';
+    document.body.appendChild(ov);
+    $('stopRecBtn').onclick = toggleRecord;
+    recordingTimer = setInterval(function(){
+      const s = Math.floor((Date.now() - recordingStart) / 1000);
+      const t = $('recTimer'); if (t) t.textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+      if (s >= 60) toggleRecord();
+    }, 200);
+  } catch (e) { toast('❌ Mikrofon tidak diizinkan'); }
+}
+
+/* ============ GRUP ============ */
+function renderGroupsList(root){
+  const meId = getMeId();
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = '👥 Grup Saya';
+  root.appendChild(h);
+  const groups = Object.values(state.groups).filter(function(g){return g.members.indexOf(meId) >= 0;});
+  const createBtn = document.createElement('button');
+  createBtn.className = 'btn';
+  createBtn.style.marginBottom = '14px';
+  createBtn.textContent = '➕ Buat Grup';
+  createBtn.onclick = openCreateGroup;
+  root.appendChild(createBtn);
+  if (!groups.length) {
+    root.innerHTML += '<div class="empty"><div class="big">👥</div><h4>Belum ada grup</h4></div>';
+    return;
+  }
+  groups.forEach(function(g){
+    const div = document.createElement('div');
+    div.className = 'group-item';
+    const last = g.messages[g.messages.length-1];
+    div.innerHTML = '<div class="gic">' + (g.emoji || '👥') + '</div>' +
+      '<div class="info"><div class="name">' + esc(g.name) + '</div>' +
+      '<div class="sub">' + g.members.length + ' anggota' + (last ? ' • ' + esc((last.text||'[Media]').slice(0,25)) : '') + '</div></div>';
+    div.onclick = function(){ go('groupchat', { groupId: g.id }); };
+    root.appendChild(div);
+  });
+}
+
+function openCreateGroup(){
+  let emoji = '👥';
+  let selectedMembers = [];
+  const idsSet = {};
+  (me().following||[]).forEach(function(i){ idsSet[i] = true; });
+  (me().followers||[]).forEach(function(i){ idsSet[i] = true; });
+  const friendIds = Object.keys(idsSet).map(function(id){ return user(id); }).filter(function(u){ return u && u.id !== getMeId(); });
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  let html = '<div class="modal"><h3>➕ Buat Grup</h3>' +
+    '<input class="field" id="gName" placeholder="Nama grup" maxlength="30">' +
+    '<label>Emoji</label>' +
+    '<div class="emoji-pick" id="gEmoji">' + ['👥','🌟','🔥','🎮','📚','🎵','⚽','🍕','💼','🎨','🐱','🌸'].map(function(e,i){return '<button data-e="'+e+'" class="'+(i===0?'sel':'')+'">'+e+'</button>';}).join('') + '</div>' +
+    '<label>Pilih anggota</label>' +
+    '<div id="gMembers" style="max-height:200px;overflow-y:auto;margin-bottom:14px">';
+  if (!friendIds.length) {
+    html += '<p style="color:var(--muted);font-size:13px;padding:10px">Belum ada teman.</p>';
+  } else {
+    friendIds.forEach(function(u){
+      html += '<div class="user-row" data-id="' + u.id + '" style="margin-bottom:6px">' + avatarHtml(u,'sm') +
+        '<div class="info"><div class="name">' + esc(u.name) + '</div></div>' +
+        '<div class="chk" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div></div>';
+    });
+  }
+  html += '</div><button class="btn" id="gCreate">Buat</button>' +
+    '<button class="btn sec" id="gCancel" style="margin-top:8px">Batal</button></div>';
+  m.innerHTML = html;
+  document.body.appendChild(m);
+  $('gCancel').onclick = function(){ m.remove(); };
+  $('gEmoji').onclick = function(e){
+    const b = e.target.closest('button'); if (!b) return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel'); emoji = b.dataset.e;
+  };
+  $('gMembers').onclick = function(e){
+    const row = e.target.closest('.user-row'); if (!row) return;
+    const chk = row.querySelector('.chk');
+    const id = row.dataset.id;
+    const i = selectedMembers.indexOf(id);
+    if (i >= 0) { selectedMembers.splice(i,1); chk.style.background = ''; chk.style.color = ''; }
+    else { selectedMembers.push(id); chk.style.background = 'var(--p1)'; chk.style.color = '#fff'; }
+  };
+  $('gCreate').onclick = function(){
+    const name = $('gName').value.trim();
+    if (!name) return toast('Isi nama grup');
+    if (!selectedMembers.length) return toast('Pilih anggota');
+    const gid = uid('g_');
+    state.groups[gid] = {
+      id: gid, name: name, emoji: emoji,
+      members: [getMeId()].concat(selectedMembers),
+      admins: [getMeId()], createdBy: getMeId(), createdAt: Date.now(),
+      messages: [{ id: uid('gm'), from: getMeId(), text: 'Grup "' + name + '" dibuat', time: Date.now(), system: true }]
+    };
+    saveState(); m.remove();
+    toast('Grup dibuat! 🎉');
+    go('groupchat', { groupId: gid });
+  };
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+}
+
+function renderGroupChat(root){
+  const meId = getMeId();
+  const g = state.groups[view.groupId]; if (!g) { go('groups'); return; }
+  const body = document.createElement('div');
+  body.className = 'chat-body'; body.id = 'chatBody';
+  g.messages.forEach(function(m){
+    const div = document.createElement('div');
+    if (m.system) {
+      div.style.cssText = 'text-align:center;font-size:12px;color:var(--muted);padding:6px';
+      const u = user(m.from) || { name:'?' };
+      div.textContent = u.name + ' ' + m.text;
+    } else {
+      const isMe = m.from === meId;
+      const u = user(m.from) || { name:'?', avatar:'❓' };
+      div.className = 'bubble ' + (isMe ? 'me' : 'them');
+      let content = '';
+      if (!isMe) content += '<div style="font-size:11px;font-weight:700;color:var(--p1);margin-bottom:4px">' + esc(u.name) + '</div>';
+      if (m.type === 'image') content += '<img src="' + m.image + '">';
+      else if (m.type === 'audio') content += '<audio controls src="' + m.audio + '"></audio>';
+      content += esc(m.text||'');
+      content += '<span class="t">' + timeFull(m.time) + '</span>';
+      div.innerHTML = content;
+    }
+    body.appendChild(div);
+  });
+  root.appendChild(body);
+
+  const row = document.createElement('div');
+  row.className = 'chat-input-row';
+  row.innerHTML = '<button class="sm-btn" id="grpImgBtn">📷</button>' +
+    '<input type="file" id="grpImg" accept="image/*" style="display:none">' +
+    '<input id="chatInput" placeholder="Ketik pesan grup..." maxlength="300">' +
+    '<button class="send" id="sendGrpBtn">➤</button>';
+  root.appendChild(row);
+  $('grpImgBtn').onclick = function(){ $('grpImg').click(); };
+  $('sendGrpBtn').onclick = sendGroupMessage;
+  $('chatInput').addEventListener('keydown', function(e){ if (e.key === 'Enter') sendGroupMessage(); });
+  $('grpImg').onchange = function(e){
+    const f = e.target.files[0]; if (!f) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const img = new Image();
+      img.onload = function(){
+        const sc = Math.min(1, 900 / img.width);
+        const c = document.createElement('canvas');
+        c.width = img.width * sc; c.height = img.height * sc;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        g.messages.push({ id: uid('gm'), from: meId, type:'image', image: c.toDataURL('image/jpeg', 0.75), time: Date.now() });
+        saveState(); renderGroupChat($('pageBody'));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(f);
+  };
+  setTimeout(function(){ body.scrollTop = body.scrollHeight; }, 40);
+}
+
+function sendGroupMessage(){
+  const inp = $('chatInput'); if (!inp) return;
+  const text = inp.value.trim(); if (!text) return;
+  const g = state.groups[view.groupId]; if (!g) return;
+  g.messages.push({ id: uid('gm'), from: getMeId(), text: text, time: Date.now() });
+  inp.value = '';
+  saveState();
+  renderGroupChat($('pageBody'));
+  const bots = g.members.filter(function(mid){ return state.users[mid] && state.users[mid].isBot; });
+  if (bots.length) {
+    const botId = bots[Math.floor(Math.random()*bots.length)];
+    setTimeout(function(){
+      const reply = BOT_REPLIES[Math.floor(Math.random()*BOT_REPLIES.length)];
+      g.messages.push({ id: uid('gm'), from: botId, text: reply, time: Date.now() });
+      saveState();
+      if (view.screen === 'groupchat' && view.groupId === g.id) {
+        renderGroupChat($('pageBody'));
+        playSoundEffect(700, 0.2);
+      }
+    }, 1200 + Math.random()*1500);
+  }
+}
+
+/* ============ INIT ============ */
+state = loadState();
+seed();
+applyTheme();
+render();
+
+document.addEventListener('visibilitychange', function(){
+  if (!document.hidden) { state = loadState(); render(); }
+});
+
+setInterval(function(){
+  if (getMeId() && ['feed','chat','profile','notif','reels'].indexOf(view.screen) >= 0) {
+    state = loadState();
+    if (view.screen === 'reels') return;
+    render();
+  }
+}, 30000);
+</script>
+</body>
+</html>
